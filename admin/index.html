@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Panel privado: no indexar, CSP estricta, sin referrer hacia afuera -->
+  <meta name="robots" content="noindex, nofollow, noarchive" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firebaseinstallations.googleapis.com https://content-firebaseappcheck.googleapis.com https://www.google.com; frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Panel comercial | Santévit IPS</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Montserrat+Alternates:wght@600;700&display=swap" />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script src="../assets/js/config.js" defer></script>
+  <script src="../assets/vendor/firebase-admin.bundle.js" defer></script>
+  <script src="../assets/vendor/chart.umd.min.js" defer></script>
+  <script src="../assets/js/admin.js" defer></script>
+</head>
+<body class="min-h-screen bg-slate-100">
+
+  <!-- ============================== LOGIN ============================== -->
+  <section id="view-login" class="flex min-h-screen items-center justify-center bg-brand-navy px-4">
+    <form id="login-form" class="card w-full max-w-sm" novalidate>
+      <div class="flex items-center gap-2">
+        <img src="../assets/img/favicon.svg" alt="" class="h-9 w-9" />
+        <span class="font-display text-xl font-bold">santévit <span class="text-brand-sky">I.P.S.</span></span>
+      </div>
+      <h1 class="mt-6 text-2xl font-bold">Panel comercial</h1>
+      <p class="mt-1 text-sm text-brand-navy/70">Acceso exclusivo para personal autorizado.</p>
+
+      <div id="login-fields" class="mt-6 space-y-4">
+        <div>
+          <label for="l-email" class="field-label">Correo</label>
+          <input id="l-email" type="email" class="field" autocomplete="username" required maxlength="254" />
+        </div>
+        <div>
+          <label for="l-pass" class="field-label">Contraseña</label>
+          <input id="l-pass" type="password" class="field" autocomplete="current-password" required minlength="8" maxlength="128" />
+        </div>
+      </div>
+      <p id="demo-login-note" hidden class="mt-6 rounded-xl bg-amber-50 p-3 text-sm text-amber-900">
+        <strong>Modo demo.</strong> Firebase no está configurado: verás datos de ejemplo más los leads enviados desde este navegador.
+      </p>
+      <button id="login-btn" type="submit" class="btn-primary mt-6 w-full">Ingresar</button>
+      <p id="login-error" class="mt-3 text-center text-sm text-red-700" role="alert"></p>
+    </form>
+  </section>
+
+  <!-- ============================== DASHBOARD ============================== -->
+  <div id="view-app" hidden>
+    <header class="sticky top-0 z-30 border-b border-brand-navy/10 bg-white">
+      <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4">
+        <div class="flex items-center gap-2">
+          <img src="../assets/img/favicon.svg" alt="" class="h-8 w-8" />
+          <span class="font-display font-bold">Panel comercial</span>
+          <span id="demo-pill" hidden class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-900">DEMO</span>
+        </div>
+        <div class="flex items-center gap-3 text-sm">
+          <span id="user-email" class="hidden text-brand-navy/60 sm:inline"></span>
+          <button id="logout-btn" type="button" class="rounded-full border border-brand-navy/20 px-4 py-1.5 font-semibold hover:border-brand-orange">Cerrar sesión</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-7xl space-y-6 px-4 py-6">
+      <!-- Filtros globales -->
+      <div class="flex flex-wrap items-center gap-3">
+        <div role="group" aria-label="Periodo" class="inline-flex rounded-full bg-white p-1 shadow-sm ring-1 ring-brand-navy/10" id="range-group">
+          <button type="button" data-range="7"   class="range-btn rounded-full px-4 py-1.5 text-sm font-semibold">7 días</button>
+          <button type="button" data-range="30"  class="range-btn rounded-full px-4 py-1.5 text-sm font-semibold">30 días</button>
+          <button type="button" data-range="90"  class="range-btn rounded-full px-4 py-1.5 text-sm font-semibold">90 días</button>
+          <button type="button" data-range="365" class="range-btn rounded-full px-4 py-1.5 text-sm font-semibold">12 meses</button>
+        </div>
+        <button id="refresh-btn" type="button" class="rounded-full bg-white px-4 py-1.5 text-sm font-semibold shadow-sm ring-1 ring-brand-navy/10 hover:ring-brand-sky">↻ Actualizar</button>
+        <span id="last-update" class="text-xs text-brand-navy/50"></span>
+      </div>
+
+      <!-- KPIs -->
+      <section aria-label="Indicadores" class="grid grid-cols-2 gap-4 lg:grid-cols-5">
+        <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-navy/5">
+          <p class="text-sm text-brand-navy/60">Leads</p>
+          <p id="kpi-leads" class="mt-1 font-display text-3xl font-bold">–</p>
+          <p id="kpi-leads-delta" class="mt-1 text-xs font-semibold"></p>
+        </div>
+        <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-navy/5">
+          <p class="text-sm text-brand-navy/60">Visitas únicas</p>
+          <p id="kpi-visits" class="mt-1 font-display text-3xl font-bold">–</p>
+          <p id="kpi-visits-delta" class="mt-1 text-xs font-semibold"></p>
+        </div>
+        <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-navy/5">
+          <p class="text-sm text-brand-navy/60">Clics a WhatsApp</p>
+          <p id="kpi-wa" class="mt-1 font-display text-3xl font-bold">–</p>
+          <p id="kpi-wa-delta" class="mt-1 text-xs font-semibold"></p>
+        </div>
+        <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-navy/5">
+          <p class="text-sm text-brand-navy/60">Conversión</p>
+          <p id="kpi-conv" class="mt-1 font-display text-3xl font-bold">–</p>
+          <p class="mt-1 text-xs text-brand-navy/50">(leads + clics WA) / visitas</p>
+        </div>
+        <div class="col-span-2 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-orange/30 lg:col-span-1">
+          <p class="text-sm text-brand-navy/60">⚠ Prioritarios sin contactar</p>
+          <p id="kpi-urgent" class="mt-1 font-display text-3xl font-bold text-brand-orange">–</p>
+          <p class="mt-1 text-xs text-brand-navy/50">Piden atención &lt; 48 h</p>
+        </div>
+      </section>
+
+      <!-- Gráficas -->
+      <section class="grid gap-6 lg:grid-cols-3">
+        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-brand-navy/5 lg:col-span-2">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-lg font-bold">Crecimiento</h2>
+              <p class="text-sm text-brand-navy/60">Leads del formulario y clics a WhatsApp</p>
+            </div>
+            <div class="flex flex-wrap gap-2 text-sm">
+              <div role="group" aria-label="Agrupar por" class="inline-flex rounded-full bg-slate-100 p-1" id="bucket-group">
+                <button type="button" data-bucket="day"   class="bucket-btn rounded-full px-3 py-1 font-semibold">Día</button>
+                <button type="button" data-bucket="week"  class="bucket-btn rounded-full px-3 py-1 font-semibold">Semana</button>
+                <button type="button" data-bucket="month" class="bucket-btn rounded-full px-3 py-1 font-semibold">Mes</button>
+              </div>
+              <label class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 font-semibold">
+                <input id="cumulative" type="checkbox" class="accent-brand-orange" /> Acumulado
+              </label>
+            </div>
+          </div>
+          <div class="relative mt-4 h-72"><canvas id="chart-growth" role="img" aria-label="Gráfica de crecimiento de leads y clics a WhatsApp"></canvas></div>
+        </div>
+        <div class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-brand-navy/5">
+          <h2 class="text-lg font-bold">Leads por servicio</h2>
+          <p class="text-sm text-brand-navy/60">En el periodo seleccionado</p>
+          <div class="relative mt-4 h-72"><canvas id="chart-services" role="img" aria-label="Gráfica de leads por servicio"></canvas></div>
+        </div>
+      </section>
+
+      <!-- Fuentes de tráfico -->
+      <section class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-brand-navy/5">
+        <h2 class="text-lg font-bold">¿De dónde llegan?</h2>
+        <p class="text-sm text-brand-navy/60">Rendimiento por canal (Google Ads, Meta Ads, orgánico…)</p>
+        <div class="mt-4 overflow-x-auto">
+          <table class="w-full min-w-[520px] text-left text-sm">
+            <thead class="text-xs uppercase tracking-wider text-brand-navy/50">
+              <tr><th class="py-2 pr-4">Canal</th><th class="py-2 pr-4 text-right">Visitas</th><th class="py-2 pr-4 text-right">Clics WA</th><th class="py-2 pr-4 text-right">Leads</th><th class="py-2 text-right">Conversión</th></tr>
+            </thead>
+            <tbody id="sources-body" class="divide-y divide-brand-navy/5"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Tabla de leads -->
+      <section class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-brand-navy/5">
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 class="text-lg font-bold">Quiénes nos consultan</h2>
+            <p id="leads-count" class="text-sm text-brand-navy/60"></p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <input id="q" type="search" placeholder="Buscar nombre, celular o correo" maxlength="100" class="field w-60 py-2 text-sm" aria-label="Buscar" />
+            <select id="f-estado" class="field w-auto py-2 text-sm" aria-label="Filtrar por estado">
+              <option value="">Todos los estados</option>
+              <option value="nuevo">Nuevo</option>
+              <option value="contactado">Contactado</option>
+              <option value="agendado">Agendado</option>
+              <option value="atendido">Atendido</option>
+              <option value="descartado">Descartado</option>
+            </select>
+            <select id="f-serv" class="field w-auto py-2 text-sm" aria-label="Filtrar por servicio">
+              <option value="">Todos los servicios</option>
+            </select>
+            <button id="export-btn" type="button" class="btn-primary px-4 py-2 text-sm">Exportar CSV</button>
+          </div>
+        </div>
+        <div class="mt-4 overflow-x-auto">
+          <table class="w-full min-w-[900px] text-left text-sm">
+            <thead class="text-xs uppercase tracking-wider text-brand-navy/50">
+              <tr>
+                <th class="py-2 pr-3">Fecha</th><th class="py-2 pr-3">Nombre</th><th class="py-2 pr-3">Contacto</th>
+                <th class="py-2 pr-3">Servicio</th><th class="py-2 pr-3">&lt;48 h</th><th class="py-2 pr-3">Canal</th>
+                <th class="py-2 pr-3">Estado</th><th class="py-2">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="leads-body" class="divide-y divide-brand-navy/5"></tbody>
+          </table>
+        </div>
+        <div class="mt-4 flex items-center justify-between text-sm">
+          <button id="prev-page" type="button" class="rounded-full px-4 py-1.5 font-semibold ring-1 ring-brand-navy/15 disabled:opacity-40">← Anterior</button>
+          <span id="page-info" class="text-brand-navy/60"></span>
+          <button id="next-page" type="button" class="rounded-full px-4 py-1.5 font-semibold ring-1 ring-brand-navy/15 disabled:opacity-40">Siguiente →</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Diálogo de notas -->
+  <dialog id="notes-dialog" class="w-[min(92vw,480px)] rounded-3xl p-0 backdrop:bg-brand-navy/50">
+    <form method="dialog" class="p-6">
+      <h3 class="text-lg font-bold">Notas de seguimiento</h3>
+      <p id="notes-who" class="text-sm text-brand-navy/60"></p>
+      <textarea id="notes-text" class="field mt-4 h-40" maxlength="2000"></textarea>
+      <div class="mt-4 flex justify-end gap-2">
+        <button value="cancel" class="rounded-full px-4 py-2 font-semibold ring-1 ring-brand-navy/15">Cancelar</button>
+        <button id="notes-save" value="save" class="btn-primary px-5 py-2">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" role="status" aria-live="polite" class="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full bg-brand-navy px-5 py-2.5 text-sm text-white opacity-0 transition-opacity"></div>
+</body>
+</html>

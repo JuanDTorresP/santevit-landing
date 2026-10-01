@@ -1,0 +1,22 @@
+{
+  "name": "santevit-landing",
+  "version": "1.0.0",
+  "description": "Herramientas OPCIONALES de desarrollo (no se necesitan para publicar)",
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -i styles/input.css -o ../assets/css/styles.css --minify",
+    "build:firebase": "esbuild src/admin-entry.js --bundle --minify --format=iife --target=es2020 --legal-comments=none --outfile=../assets/vendor/firebase-admin.bundle.js && esbuild src/appcheck-entry.js --bundle --minify --format=iife --target=es2020 --legal-comments=none --outfile=../assets/vendor/firebase-appcheck.bundle.js",
+    "build": "npm run build:css && npm run build:firebase",
+    "test:rules": "firebase emulators:exec --only firestore --project demo-santevit \"node tests/rules.test.mjs\""
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.2",
+    "esbuild": "^0.28.2",
+    "tailwindcss": "^3.4.19"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "firebase": "^12.19.0"
+  },
+  "private": true
+}

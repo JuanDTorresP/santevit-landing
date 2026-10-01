@@ -1,0 +1,123 @@
+rules_version = '2';
+
+// ============================================================================
+//  SANTÉVIT IPS — Reglas de seguridad de Firestore
+//  Se publican con:  firebase deploy --only firestore:rules
+//
+//  Modelo:
+//   • El público SOLO puede CREAR un lead válido y sumar +1 a los contadores
+//     diarios. No puede leer, editar ni borrar nada.
+//   • Solo usuarios con documento en /admins/{uid} pueden leer y gestionar.
+//   • Un mismo celular solo puede enviar 1 lead cada 10 minutos (colección
+//     /throttle, verificada aquí en el servidor).
+//   • Cualquier otra ruta está cerrada (regla final "deny all").
+// ============================================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Utilidades ----------
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    function optStr(d, k, n) {
+      return !(k in d) || d[k] == null || (d[k] is string && d[k].size() <= n);
+    }
+    function phoneDigits(tel) {
+      return tel.replace('\\+', '');
+    }
+
+    // ---------- Validación de un lead nuevo ----------
+    function validLead(d) {
+      return d.keys().hasOnly([
+          'nombre', 'telefono', 'correo', 'servicio', 'urgente_48h',
+          'acepta_tratamiento', 'consentimiento_version', 'created_at', 'estado',
+          'utm_source', 'utm_medium', 'utm_campaign', 'referrer', 'landing_path'])
+        && d.keys().hasAll([
+          'nombre', 'telefono', 'correo', 'servicio', 'urgente_48h',
+          'acepta_tratamiento', 'consentimiento_version', 'created_at', 'estado'])
+        && d.nombre is string && d.nombre.size() >= 2 && d.nombre.size() <= 100
+        && !d.nombre.matches('.*[<>].*')
+        && d.telefono is string && d.telefono.matches('^\\+57(3[0-9]{9}|60[0-9]{8})$')
+        && d.correo is string && d.correo.size() <= 254
+        && d.correo.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]{2,}$')
+        && d.servicio in ['express', 'cardiometabolico', 'segunda_opinion', 'equipos_comen', 'no_seguro']
+        && d.urgente_48h is bool
+        && d.acepta_tratamiento == true
+        && d.consentimiento_version is string && d.consentimiento_version.size() <= 30
+        && d.created_at == request.time
+        && d.estado == 'nuevo'
+        && optStr(d, 'utm_source', 100) && optStr(d, 'utm_medium', 100)
+        && optStr(d, 'utm_campaign', 150) && optStr(d, 'referrer', 200)
+        && optStr(d, 'landing_path', 200);
+    }
+
+    // ---------- Leads ----------
+    match /leads/{leadId} {
+      // Crear: datos válidos + marca anti-spam escrita en la MISMA operación
+      allow create: if validLead(request.resource.data)
+        && getAfter(/databases/$(database)/documents/throttle/$(phoneDigits(request.resource.data.telefono))).data.ts == request.time;
+
+      allow read, delete: if isAdmin();
+
+      // Editar: solo estado y notas (nombre, teléfono y correo no se alteran)
+      allow update: if isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['estado', 'notas', 'updated_at', 'updated_by'])
+        && request.resource.data.estado in ['nuevo', 'contactado', 'agendado', 'atendido', 'descartado']
+        && (!('notas' in request.resource.data) || (request.resource.data.notas is string && request.resource.data.notas.size() <= 2000))
+        && request.resource.data.updated_by == request.auth.uid
+        && request.resource.data.updated_at == request.time;
+    }
+
+    // ---------- Límite anti-spam: 1 envío por celular cada 10 minutos ----------
+    match /throttle/{tel} {
+      allow create: if tel.matches('^57[0-9]{10}$')
+        && request.resource.data.keys().hasOnly(['ts'])
+        && request.resource.data.ts == request.time;
+      allow update: if request.resource.data.keys().hasOnly(['ts'])
+        && request.resource.data.ts == request.time
+        && resource.data.ts < request.time - duration.value(10, 'm');
+      // Nadie lo lee: no expone datos
+    }
+
+    // ---------- Contadores diarios anónimos (visitas y clics a WhatsApp) ----------
+    // Campos: v_<canal> (visitas) y w_<canal> (clics WA). Solo se permite +1.
+    function validCounterKey(k) {
+      return k.matches('^[vw]_(google_ads|meta_ads|google_organico|meta_organico|referido|directo|otro)$');
+    }
+    match /stats_daily/{day} {
+      allow read: if isAdmin();
+      allow create: if day.matches('^20[0-9]{2}-[01][0-9]-[0-3][0-9]$')
+        && request.resource.data.keys().size() == 1
+        && validCounterKey(request.resource.data.keys()[0])
+        && request.resource.data[request.resource.data.keys()[0]] == 1;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().size() == 1
+        && validCounterKey(request.resource.data.diff(resource.data).affectedKeys().toList()[0])
+        && request.resource.data[request.resource.data.diff(resource.data).affectedKeys().toList()[0]]
+           == resource.data.get(request.resource.data.diff(resource.data).affectedKeys().toList()[0], 0) + 1;
+    }
+
+    // ---------- Administradores (se crean a mano desde la consola) ----------
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // ---------- Bitácora de cambios (solo agregar, nunca editar ni borrar) ----------
+    match /audit/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['lead_id', 'actor', 'action', 'old_estado', 'new_estado', 'at'])
+        && request.resource.data.actor == request.auth.uid
+        && request.resource.data.at == request.time
+        && request.resource.data.action in ['update', 'delete'];
+      allow update, delete: if false;
+    }
+
+    // ---------- Todo lo demás: cerrado ----------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

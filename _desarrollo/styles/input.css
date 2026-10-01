@@ -1,0 +1,45 @@
+/* Fuente de estilos. Se compila a ../assets/css/styles.css con: npm run build:css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { @apply font-body text-brand-navy bg-white antialiased; }
+  h1, h2, h3, h4 { @apply font-display; }
+  :focus-visible { @apply outline-none ring-2 ring-brand-orange ring-offset-2; }
+  [hidden] { display: none !important; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-6xl px-4 sm:px-6; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-display text-base font-bold transition active:scale-[.98]; }
+  .btn-primary { @apply btn bg-brand-orange text-white shadow-card hover:bg-[#c33b02]; }
+  .btn-wa { @apply btn bg-wa text-white shadow-card hover:bg-wa-dark; }
+  .btn-ghost { @apply btn border-2 border-brand-navy/15 text-brand-navy hover:border-brand-sky hover:text-brand-navy; }
+  .eyebrow { @apply font-display text-xs font-bold uppercase tracking-[.18em] text-brand-sky; }
+  .section-title { @apply font-display text-3xl font-bold leading-tight sm:text-4xl; }
+  .card { @apply rounded-3xl bg-white p-6 shadow-card ring-1 ring-brand-navy/5; }
+  .field-label { @apply mb-1 block text-sm font-semibold; }
+  .field { @apply w-full rounded-xl border border-brand-navy/20 bg-white px-4 py-3 text-base text-brand-navy placeholder:text-brand-navy/40 focus:border-brand-sky focus:outline-none focus:ring-2 focus:ring-brand-sky/40; }
+  .field[aria-invalid="true"] { @apply border-red-600 ring-2 ring-red-200; }
+  .field-error { @apply mt-1 text-sm text-red-700; }
+  .chip { @apply inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm ring-1 ring-white/20; }
+  .faq-item summary { @apply flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-display text-lg font-semibold; }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item[open] .faq-icon { @apply rotate-45; }
+}
+
+/* Línea de electrocardiograma animada del hero */
+.ecg-path { stroke-dasharray: 1200; stroke-dashoffset: 1200; animation: ecg 3.2s linear infinite; }
+@keyframes ecg { to { stroke-dashoffset: 0; } }
+
+/* Pulso del botón flotante de WhatsApp */
+.wa-pulse::before { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: #25D366; animation: pulse 2.2s ease-out infinite; z-index: -1; }
+@keyframes pulse { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.7); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ecg-path { animation: none; stroke-dashoffset: 0; }
+  .wa-pulse::before { animation: none; }
+}
