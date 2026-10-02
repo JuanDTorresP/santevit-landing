@@ -12,7 +12,20 @@
   const CFG = window.SANTEVIT_CONFIG || {};
   const FB = CFG.FIREBASE || {};
   const HAS_BACKEND = Boolean(FB.apiKey && FB.projectId);
-  const HAS_WA = /^\d{10,15}$/.test(CFG.WHATSAPP_NUMBER || "");
+  // Dos líneas de WhatsApp: "citas" (agendar rápido) y "asesor" (orientación / B2B).
+  // Acepta el número con espacios, guiones o "+"; si tiene 10 dígitos le agrega el 57.
+  const normWa = (n) => {
+    let d = String(n || "").replace(/\D/g, "");
+    if (/^3\d{9}$/.test(d)) d = `57${d}`;
+    return /^\d{11,15}$/.test(d) ? d : "";
+  };
+  const WA_LINES = {
+    citas: normWa(CFG.WHATSAPP_CITAS || CFG.WHATSAPP_NUMBER),
+    asesor: normWa(CFG.WHATSAPP_ASESOR),
+  };
+  if (!WA_LINES.asesor) WA_LINES.asesor = WA_LINES.citas; // si falta uno, se usa el otro
+  if (!WA_LINES.citas) WA_LINES.citas = WA_LINES.asesor;
+  const HAS_WA = Boolean(WA_LINES.citas);
   const DEMO_KEY = "santevit_demo_leads";
   const TZ = "America/Bogota";
 
@@ -132,17 +145,21 @@
   if (!store.get("sv_visit")) { store.set("sv_visit", "1"); track("visit"); }
 
   /* ---------- Enlaces de WhatsApp ---------- */
-  function waUrl(text) {
-    return `https://wa.me/${CFG.WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  function waUrl(text, line = "citas") {
+    return `https://wa.me/${WA_LINES[line] || WA_LINES.citas}?text=${encodeURIComponent(text)}`;
   }
+  const WA_MESSAGES = {
+    citas: CFG.WHATSAPP_MENSAJE_CITAS || "Hola Santévit, quiero agendar un electrocardiograma.",
+    asesor: CFG.WHATSAPP_MENSAJE_ASESOR || "Hola Santévit, quiero hablar con un asesor.",
+  };
   function setupWhatsApp() {
     $$("[data-wa]").forEach((a) => {
+      const line = a.dataset.wa === "asesor" ? "asesor" : "citas";
       const service = a.dataset.waService;
-      const msg = service
-        ? `Hola Santévit, quiero información sobre el servicio ${service}.`
-        : CFG.WHATSAPP_DEFAULT_MESSAGE || "Hola Santévit, quiero agendar un electrocardiograma.";
+      const msg = a.dataset.waMessage
+        || (service ? `Hola Santévit, quiero agendar el servicio ${service}.` : WA_MESSAGES[line]);
       if (HAS_WA) {
-        a.href = waUrl(msg);
+        a.href = waUrl(msg, line);
         a.target = "_blank";
         a.rel = "noopener noreferrer";
       } else {
@@ -151,6 +168,7 @@
       a.addEventListener("click", () => {
         if (HAS_WA) track("wa_click");
         if (!HAS_WA && service) preselect(service);
+        if (!HAS_WA && a.dataset.preselect) preselect(a.dataset.preselect);
       });
     });
   }
@@ -166,7 +184,7 @@
     const sel = $("#f-servicio");
     if (sel) sel.value = SERVICE_MAP[v] || v;
   }
-  $$("[data-preselect]").forEach((a) => a.addEventListener("click", () => preselect(a.dataset.preselect)));
+  $$("[data-preselect]:not([data-wa])").forEach((a) => a.addEventListener("click", () => preselect(a.dataset.preselect)));
 
   /* ======================= FORMULARIO ======================= */
   const form = $("#lead-form");
@@ -237,7 +255,7 @@
     box.hidden = false;
     if (HAS_WA && data) {
       const label = $(`#f-servicio option[value="${data.servicio}"]`)?.textContent || "";
-      $("#success-wa").href = waUrl(`Hola Santévit, soy ${data.nombre}. Acabo de dejar mis datos para: ${label}.`);
+      $("#success-wa").href = waUrl(`Hola Santévit, soy ${data.nombre}. Acabo de dejar mis datos para: ${label}.`, data.servicio === "equipos_comen" || data.servicio === "no_seguro" ? "asesor" : "citas");
     } else if (!HAS_WA) {
       $("#success-wa").hidden = true;
     }

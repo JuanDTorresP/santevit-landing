@@ -3,9 +3,9 @@
    --------------------------------------------------------------------------
    Este es el ÚNICO archivo que debes editar para poner la página en marcha.
 
-   1. WHATSAPP_NUMBER: número del WhatsApp Concierge, solo dígitos, con
-      indicativo de país y sin "+" ni espacios. Ej: "573001234567".
-      Mientras esté vacío, todos los botones de WhatsApp llevan al formulario.
+   1. WHATSAPP_CITAS y WHATSAPP_ASESOR: los dos números de WhatsApp, solo
+      dígitos, con el 57 adelante. Ej: "573001234567".
+      Mientras estén vacíos, los botones de WhatsApp llevan al formulario.
 
    2. FIREBASE: pega aquí el objeto "firebaseConfig" que te da la consola de
       Firebase (Configuración del proyecto → Tus apps → App web).
@@ -18,7 +18,11 @@
       reCAPTCHA v3 para activar App Check (bloquea bots y scripts).
    ========================================================================== */
 window.SANTEVIT_CONFIG = Object.freeze({
-  WHATSAPP_NUMBER: "",
+  // WhatsApp: escriba el número con el 57 adelante, solo dígitos. Ej: "573001234567"
+  // Línea para AGENDAR CITAS rápidas (botón flotante, "Agendar por WhatsApp" y planes)
+  WHATSAPP_CITAS: "573015176341",
+  // Línea para HABLAR CON UN ASESOR ("Hablar con un asesor" y equipos Comen B2B)
+  WHATSAPP_ASESOR: "573142187866",
 
   FIREBASE: Object.freeze({
     apiKey: "AIzaSyDmsoIJuBieFdd2x_enFquWTYQbLuFXWlc",
@@ -31,9 +35,11 @@ window.SANTEVIT_CONFIG = Object.freeze({
 
   RECAPTCHA_SITE_KEY: "",
 
-  // Mensaje que se precarga al abrir WhatsApp desde la página
-  WHATSAPP_DEFAULT_MESSAGE:
+  // Mensajes que se precargan al abrir cada WhatsApp desde la página
+  WHATSAPP_MENSAJE_CITAS:
     "Hola Santévit, quiero agendar un electrocardiograma con lectura especializada.",
+  WHATSAPP_MENSAJE_ASESOR:
+    "Hola Santévit, quiero hablar con un asesor.",
 
   // Datos institucionales que aparecen en el pie de página (completar)
   REPS_CODE: "Por definir",
