@@ -11,31 +11,37 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 
   <!-- ===================== SEO ===================== -->
-  <title>Electrocardiograma en Bogotá con lectura en menos de 24 h | Santévit IPS</title>
-  <meta name="description" content="Electrocardiograma en Bogotá con lectura especializada en menos de 24 horas. Planes Express, Cardiometabólico y Segunda Opinión. Agenda por WhatsApp y te respondemos en menos de 5 minutos." />
+  <title>Cardiología, medicina interna y electrocardiograma en Bogotá | Santévit IPS</title>
+  <meta name="description" content="Consultas de cardiología y medicina interna, electrocardiograma y ecocardiografía en Bogotá con precios claros. Electrocardiograma con lectura por especialista desde $130.000. Agenda por WhatsApp." />
   <meta name="theme-color" content="#00263A" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="es_CO" />
-  <meta property="og:title" content="Electrocardiograma en Bogotá con lectura en menos de 24 h — Santévit IPS" />
-  <meta property="og:description" content="Toma rápida, lectura por especialista y resultados digitales. Agenda por WhatsApp." />
+  <meta property="og:title" content="Santévit IPS — Cardiología y medicina interna en Bogotá" />
+  <meta property="og:description" content="Consultas especializadas y diagnóstico cardiovascular con precios claros. Agenda por WhatsApp." />
 
   <!-- ===================== TIPOGRAFÍAS (Manual de marca) ===================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Montserrat+Alternates:wght@600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&family=Montserrat+Alternates:wght@500;600&display=swap" />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="preload" as="image" href="assets/img/hero-medica.webp" type="image/webp" />
 
-  <!-- Datos estructurados para Google (negocio médico local) -->
+  <!-- Datos estructurados para Google (negocio médico local con precios) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "MedicalClinic",
     "name": "Santévit IPS",
-    "medicalSpecialty": "Cardiovascular",
+    "medicalSpecialty": ["Cardiovascular", "InternalMedicine"],
     "address": { "@type": "PostalAddress", "addressLocality": "Bogotá", "addressCountry": "CO" },
+    "priceRange": "$130.000 - $1.000.000 COP",
     "availableService": [
-      { "@type": "MedicalTest", "name": "Electrocardiograma de 12 derivaciones con lectura especializada" }
+      { "@type": "MedicalTest", "name": "Electrocardiograma de 12 canales con lectura por especialista" },
+      { "@type": "MedicalTest", "name": "Ecocardiograma transtorácico" },
+      { "@type": "MedicalTest", "name": "Ecocardiograma de estrés farmacológico" },
+      { "@type": "MedicalProcedure", "name": "Consulta de cardiología" },
+      { "@type": "MedicalProcedure", "name": "Consulta de medicina interna" }
     ]
   }
   </script>
@@ -53,21 +59,22 @@
   </div>
 
   <!-- ============================== HEADER ============================== -->
-  <header class="sticky top-0 z-40 border-b border-brand-navy/5 bg-white/90 backdrop-blur">
-    <div class="container-x flex h-16 items-center justify-between gap-4">
-      <a href="#inicio" class="flex items-center gap-2" aria-label="Santévit IPS, inicio">
+  <header class="sticky top-0 z-40 border-b border-brand-line/50 bg-white/85 backdrop-blur-md">
+    <div class="container-x flex h-[68px] items-center justify-between gap-4">
+      <a href="#inicio" class="flex items-center gap-2.5" aria-label="Santévit IPS, inicio">
         <!-- Reemplazar por el logo oficial: assets/img/logo.svg (mín. 120 px de ancho) -->
-        <img src="assets/img/favicon.svg" alt="" width="36" height="36" class="h-9 w-9" />
-        <span class="font-display text-xl font-bold tracking-tight">santévit <span class="text-brand-sky">I.P.S.</span></span>
+        <img src="assets/img/favicon.svg" alt="" width="34" height="34" class="h-[34px] w-[34px]" />
+        <span class="font-display text-[19px] font-semibold tracking-tight">santévit <span class="font-medium text-brand-blue">IPS</span></span>
       </a>
-      <nav aria-label="Principal" class="hidden items-center gap-7 text-[15px] font-semibold md:flex">
-        <a href="#servicios" class="hover:text-brand-sky">Servicios</a>
-        <a href="#como-funciona" class="hover:text-brand-sky">Cómo funciona</a>
-        <a href="#preguntas" class="hover:text-brand-sky">Preguntas</a>
-        <a href="#equipos" class="hover:text-brand-sky">Equipos Comen</a>
+      <nav aria-label="Principal" class="hidden items-center gap-8 text-[15px] text-brand-slate lg:flex">
+        <a href="#tarifas" class="hover:text-brand-navy">Servicios y tarifas</a>
+        <a href="#como-funciona" class="hover:text-brand-navy">Cómo funciona</a>
+        <a href="#equipo" data-nav-equipo class="hover:text-brand-navy" hidden>Equipo médico</a>
+        <a href="#empresas" class="hover:text-brand-navy">Empresas</a>
+        <a href="#preguntas" class="hover:text-brand-navy">Preguntas</a>
       </nav>
-      <a href="#contacto" data-wa="citas" data-wa-source="header" class="btn-wa hidden px-5 py-2.5 text-sm sm:inline-flex">
-        <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6 2 11c0 2.6 1.2 4.9 3.2 6.6L4.5 22l4.4-2.3c1 .3 2 .4 3.1.4 5.5 0 10-4 10-9S17.5 2 12 2Zm-4 8h8v2H8v-2Zm0-3h8v2H8V7Zm0 6h5v2H8v-2Z"/></svg>
+      <a href="#agendar" data-wa="citas" data-wa-source="header" class="btn-primary hidden px-5 py-2.5 text-sm sm:inline-flex">
+        <svg aria-hidden="true" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6 2 11c0 2.6 1.2 4.9 3.2 6.6L4.5 22l4.4-2.3c1 .3 2 .4 3.1.4 5.5 0 10-4 10-9S17.5 2 12 2Zm-4 8h8v2H8v-2Zm0-3h8v2H8V7Zm0 6h5v2H8v-2Z"/></svg>
         Agendar por WhatsApp
       </a>
     </div>
@@ -75,43 +82,359 @@
 
   <main id="contenido">
     <!-- ============================== HERO ============================== -->
-    <section id="inicio" class="relative overflow-hidden bg-brand-navy text-white">
-      <!-- Línea de ECG decorativa -->
-      <svg aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-10 h-40 w-full opacity-25" viewBox="0 0 1200 160" preserveAspectRatio="none">
-        <path class="ecg-path" d="M0 90h260l20-30 18 30h60l18-70 26 130 22-80 16 20h170l20-30 18 30h60l18-70 26 130 22-80 16 20h390" fill="none" stroke="#5EB3E4" stroke-width="3" stroke-linejoin="round"/>
-      </svg>
-
-      <div class="container-x relative grid gap-10 py-14 md:grid-cols-[1.15fr_.85fr] md:items-center md:py-20">
+    <section id="inicio" class="relative overflow-hidden">
+      <div aria-hidden="true" class="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] rounded-bl-[4rem] bg-brand-ice lg:block"></div>
+      <div class="container-x relative grid items-center gap-12 py-12 sm:py-16 lg:grid-cols-[1.05fr_.95fr] lg:py-24">
         <div>
-          <p class="eyebrow text-brand-mint">Cardiología diagnóstica · Bogotá</p>
-          <h1 class="mt-4 text-[1.7rem] font-bold leading-[1.15] min-[400px]:text-[1.9rem] sm:text-5xl lg:text-[3.4rem]">
-            Electrocardiograma en Bogotá con <span class="text-brand-sky">lectura especializada</span> en menos de 24 horas
+          <p class="eyebrow">Medicina interna · Cardiología · Diagnóstico</p>
+          <h1 class="mt-5 text-[2.15rem] font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-[3.35rem]">
+            Medicina interna y cardiología con <span class="text-brand-blue">diagnóstico ágil</span> en Bogotá
           </h1>
-          <p class="mt-5 max-w-xl text-lg text-white/80">
-            Toma rápida, interpretación por médico especialista y resultado digital en tu correo o WhatsApp. Escríbenos y te respondemos en menos de 5 minutos.
+          <p class="mt-6 max-w-xl text-lg leading-relaxed text-brand-slate">
+            Consultas especializadas, electrocardiograma y ecocardiografía en una sola ruta coordinada. Precios claros desde el primer mensaje.
           </p>
           <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a href="#contacto" data-wa="asesor" data-wa-source="hero" class="btn-wa text-lg">
-              <svg aria-hidden="true" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6 2 11c0 2.6 1.2 4.9 3.2 6.6L4.5 22l4.4-2.3c1 .3 2 .4 3.1.4 5.5 0 10-4 10-9S17.5 2 12 2Zm-4 8h8v2H8v-2Zm0-3h8v2H8V7Zm0 6h5v2H8v-2Z"/></svg>
-              Hablar con un asesor
+            <a href="#agendar" data-wa="citas" data-wa-source="hero" class="btn-primary px-7 py-3.5 text-base">
+              <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6 2 11c0 2.6 1.2 4.9 3.2 6.6L4.5 22l4.4-2.3c1 .3 2 .4 3.1.4 5.5 0 10-4 10-9S17.5 2 12 2Zm-4 8h8v2H8v-2Zm0-3h8v2H8V7Zm0 6h5v2H8v-2Z"/></svg>
+              Agendar por WhatsApp
             </a>
-            <a href="#contacto" class="btn border-2 border-white/30 text-white hover:border-brand-sky">Prefiero que me llamen</a>
+            <a href="#tarifas" class="btn-outline px-7 py-3.5 text-base">Ver tarifas</a>
           </div>
-          <ul class="mt-8 flex flex-wrap gap-2" aria-label="Garantías del servicio">
-            <li class="chip"><span class="h-2 w-2 rounded-full bg-brand-mint"></span>Respuesta &lt; 5 min</li>
-            <li class="chip"><span class="h-2 w-2 rounded-full bg-brand-mint"></span>Lectura &lt; 24 h</li>
-            <li class="chip"><span class="h-2 w-2 rounded-full bg-brand-mint"></span>ECG de 12 derivaciones</li>
-          </ul>
+          <dl class="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-brand-line/70 pt-6">
+            <div><dt class="text-[11px] uppercase tracking-wider text-brand-slate sm:text-xs">Electro&shy;cardiograma</dt><dd class="mt-1 font-display text-base font-semibold sm:text-lg">$130.000</dd></div>
+            <div><dt class="text-[11px] uppercase tracking-wider text-brand-slate sm:text-xs">Cardiología</dt><dd class="mt-1 font-display text-base font-semibold sm:text-lg">$400.000</dd></div>
+            <div><dt class="text-[11px] uppercase tracking-wider text-brand-slate sm:text-xs">Medicina interna</dt><dd class="mt-1 font-display text-base font-semibold sm:text-lg">$300.000</dd></div>
+          </dl>
         </div>
 
-        <!-- ===================== FORMULARIO DE CONTACTO ===================== -->
-        <div id="contacto" class="scroll-mt-24">
-          <form id="lead-form" class="card text-brand-navy" novalidate aria-labelledby="form-title">
-            <h2 id="form-title" class="text-2xl font-bold">Agenda tu examen</h2>
-            <p class="mt-1 text-sm text-brand-navy/70">Déjanos tus datos y un asesor te contacta.</p>
-
-            <div class="mt-5 space-y-4">
+        <div class="relative mx-auto w-full max-w-md lg:max-w-none">
+          <picture>
+            <source srcset="assets/img/hero-medica.webp" type="image/webp" />
+            <img src="assets/img/hero-medica.jpg" alt="Médica de Santévit IPS revisando resultados en una tableta" width="900" height="1012" class="aspect-[4/4.4] w-full rounded-[2rem] object-cover shadow-lift" />
+          </picture>
+          <!-- Tarjeta flotante -->
+          <div class="absolute -bottom-6 left-4 right-4 rounded-2xl bg-white/95 p-4 shadow-lift ring-1 ring-brand-line/60 backdrop-blur sm:left-auto sm:right-[-1.5rem] sm:w-72">
+            <div class="flex items-center gap-3">
+              <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-ice text-brand-blue">
+                <svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>
+              </span>
               <div>
+                <p class="text-sm font-semibold">Electrocardiograma de 12 canales</p>
+                <p class="text-sm text-brand-slate">Lectura por especialista</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== PILARES ============================== -->
+    <section aria-label="Por qué Santévit" class="border-y border-brand-line/50 bg-white">
+      <div class="container-x grid grid-cols-2 gap-6 py-10 sm:py-12 lg:grid-cols-4">
+        <div class="flex gap-3">
+          <svg aria-hidden="true" class="mt-0.5 h-6 w-6 shrink-0 text-brand-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10Z"/></svg>
+          <div><p class="font-semibold">Especialistas habilitados</p><p class="mt-1 text-sm text-brand-slate">Atención con enfoque humanizado.</p></div>
+        </div>
+        <div class="flex gap-3">
+          <svg aria-hidden="true" class="mt-0.5 h-6 w-6 shrink-0 text-brand-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h10M4 17h7"/></svg>
+          <div><p class="font-semibold">Precios claros</p><p class="mt-1 text-sm text-brand-slate">Sabes cuánto pagas antes de agendar.</p></div>
+        </div>
+        <div class="flex gap-3">
+          <svg aria-hidden="true" class="mt-0.5 h-6 w-6 shrink-0 text-brand-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>
+          <div><p class="font-semibold">Tecnología Comen</p><p class="mt-1 text-sm text-brand-slate">Equipos biomédicos de última línea.</p></div>
+        </div>
+        <div class="flex gap-3">
+          <svg aria-hidden="true" class="mt-0.5 h-6 w-6 shrink-0 text-brand-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <div><p class="font-semibold">Datos protegidos</p><p class="mt-1 text-sm text-brand-slate">Conforme a la Ley 1581 de 2012.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== TARIFAS ============================== -->
+    <section id="tarifas" class="scroll-mt-20 bg-gradient-to-b from-white via-brand-ice/60 to-white py-20 sm:py-28">
+      <div class="container-x">
+        <div class="mx-auto max-w-2xl text-center" data-reveal>
+          <p class="eyebrow">Servicios y tarifas 2026</p>
+          <h2 class="section-title mt-3">Elige el servicio que necesitas</h2>
+          <p class="section-lead">Precios por paciente en pesos colombianos. Sin sorpresas.</p>
+        </div>
+
+        <!-- Pestañas -->
+        <div class="mt-10 flex justify-center">
+          <div role="tablist" aria-label="Tipo de servicio" class="inline-flex rounded-full bg-brand-ice p-1 ring-1 ring-brand-line/60">
+            <button role="tab" type="button" class="tab" id="tab-consultas" aria-controls="panel-consultas" aria-selected="true">Consultas</button>
+            <button role="tab" type="button" class="tab" id="tab-diagnostico" aria-controls="panel-diagnostico" aria-selected="false" tabindex="-1">Diagnóstico</button>
+            <button role="tab" type="button" class="tab" id="tab-ejecutivas" aria-controls="panel-ejecutivas" aria-selected="false" tabindex="-1">Valoraciones ejecutivas</button>
+          </div>
+        </div>
+
+        <!-- ---------- Panel: Consultas ---------- -->
+        <div role="tabpanel" id="panel-consultas" aria-labelledby="tab-consultas" class="mx-auto mt-10 grid max-w-5xl gap-6 md:grid-cols-3">
+          <article class="card flex flex-col p-7">
+            <h3 class="text-xl font-semibold">Medicina interna</h3>
+            <p class="mt-2 min-h-[3rem] text-[15px] text-brand-slate">Valoración integral para adultos con síntomas, antecedentes o condiciones crónicas.</p>
+            <p class="mt-6 font-display text-[2.4rem] font-semibold leading-none tracking-tight">$300.000</p>
+            <p class="mt-1 text-sm text-brand-slate">COP · por consulta</p>
+            <a href="#agendar" data-wa="citas" data-wa-service="Consulta de Medicina Interna" data-preselect="consulta_medicina_interna" data-wa-source="plan_medicina_interna" class="btn-outline mt-6 w-full">Agendar consulta</a>
+            <ul class="check-list mt-7 space-y-3 border-t border-brand-line/60 pt-6">
+              <li>Historia clínica y examen físico</li>
+              <li>Valoración electrocardiográfica incluida</li>
+              <li>Plan de manejo y seguimiento</li>
+              <li>Órdenes diagnósticas si se requieren</li>
+            </ul>
+          </article>
+
+          <article class="plan-dark relative flex flex-col rounded-3xl bg-brand-navy p-7 text-white shadow-lift">
+            <span class="absolute -top-3 left-7 rounded-full bg-brand-sky px-3 py-1 text-xs font-semibold text-brand-navy">Incluye electrocardiograma</span>
+            <h3 class="text-xl font-semibold">Cardiología</h3>
+            <p class="mt-2 min-h-[3rem] text-[15px] text-white/70">Prevención, diagnóstico y control cardiovascular con especialista.</p>
+            <p class="mt-6 font-display text-[2.4rem] font-semibold leading-none tracking-tight">$400.000</p>
+            <p class="mt-1 text-sm text-white/60">COP · por consulta</p>
+            <a href="#agendar" data-wa="citas" data-wa-service="Consulta de Cardiología" data-preselect="consulta_cardiologia" data-wa-source="plan_cardiologia" class="btn-light mt-6 w-full">Agendar consulta</a>
+            <ul class="check-list mt-7 space-y-3 border-t border-white/15 pt-6 text-white/90">
+              <li>Examen cardiovascular completo</li>
+              <li>Electrocardiograma de 12 canales</li>
+              <li>Definición de conducta médica</li>
+              <li>Indicación de ecocardiograma si aplica</li>
+            </ul>
+          </article>
+
+          <article class="flex flex-col rounded-3xl border border-dashed border-brand-line p-7">
+            <h3 class="text-xl font-semibold">¿No sabes cuál elegir?</h3>
+            <p class="mt-2 min-h-[3rem] text-[15px] text-brand-slate">Cuéntanos tu caso y un asesor te orienta hacia el servicio adecuado.</p>
+            <p class="mt-6 font-display text-[2.4rem] font-semibold leading-none tracking-tight">Sin costo</p>
+            <p class="mt-1 text-sm text-brand-slate">Orientación por WhatsApp</p>
+            <a href="#agendar" data-wa="asesor" data-preselect="no_seguro" data-wa-source="plan_orientacion" class="btn-outline mt-6 w-full">Hablar con un asesor</a>
+            <ul class="check-list mt-7 space-y-3 border-t border-brand-line/60 pt-6">
+              <li>Te ayudamos con tu orden médica</li>
+              <li>Disponibilidad y preparación</li>
+              <li>Precio confirmado antes de la cita</li>
+            </ul>
+          </article>
+        </div>
+
+        <!-- ---------- Panel: Diagnóstico ---------- -->
+        <div role="tabpanel" id="panel-diagnostico" aria-labelledby="tab-diagnostico" hidden class="mx-auto mt-10 grid max-w-5xl gap-6 md:grid-cols-3">
+          <article class="plan-dark relative flex flex-col rounded-3xl bg-brand-navy p-7 text-white shadow-lift">
+            <span class="absolute -top-3 left-7 rounded-full bg-brand-sky px-3 py-1 text-xs font-semibold text-brand-navy">Sin consulta previa</span>
+            <h3 class="text-xl font-semibold">Electrocardiograma</h3>
+            <p class="mt-2 min-h-[3rem] text-[15px] text-white/70">De 12 canales, con toma del trazado y lectura por especialista.</p>
+            <p class="mt-6 font-display text-[2.4rem] font-semibold leading-none tracking-tight">$130.000</p>
+            <p class="mt-1 text-sm text-white/60">COP · por examen</p>
+            <a href="#agendar" data-wa="citas" data-wa-service="Electrocardiograma de 12 canales" data-preselect="ecg" data-wa-source="plan_ecg" class="btn-light mt-6 w-full">Agendar examen</a>
+            <ul class="check-list mt-7 space-y-3 border-t border-white/15 pt-6 text-white/90">
+              <li>Toma en pocos minutos, indoloro</li>
+              <li>Lectura por especialista</li>
+              <li>Informe digital</li>
+              <li>Ideal para control o requisito</li>
+            </ul>
+          </article>
+
+          <article class="card flex flex-col p-7">
+            <h3 class="text-xl font-semibold">Ecocardiograma transtorácico</h3>
+            <p class="mt-2 min-h-[3rem] text-[15px] text-brand-slate">Imágenes del corazón para evaluar su estructura, función y flujo.</p>
+            <p class="mt-6 font-display text-[2.4rem] font-semibold leading-none tracking-tight">$365.000</p>
+            <p class="mt-1 text-sm text-brand-slate">COP · por estudio</p>
+            <a href="#agendar" data-wa="citas" data-wa-service="Ecocardiograma transtorácico" data-preselect="eco_transtoracico" data-wa-source="plan_eco_tt" class="btn-outline mt-6 w-full">Agendar estudio</a>
+            <ul class="check-list mt-7 space-y-3 border-t border-brand-line/60 pt-6">
+              <li>Estudio no invasivo</li>
+              <li>Informe especializado</li>
+              <li>Requiere orden médica</li>
+            </ul>
+          </article>
+
+          <article class="card flex flex-col p-7">
+            <h3 class="text-xl font-semibold">Ecocardiograma de estrés</h3>
+            <p class="mt-2 min-h-[3rem] text-[15px] text-brand-slate">Evalúa la respuesta del corazón bajo estrés inducido con medicamento.</p>
+            <p class="mt-6 font-display text-[2.4rem] font-semibold leading-none tracking-tight">$625.000</p>
+            <p class="mt-1 text-sm text-brand-slate">COP · por estudio</p>
+            <a href="#agendar" data-wa="citas" data-wa-service="Ecocardiograma de estrés farmacológico" data-preselect="eco_estres" data-wa-source="plan_eco_estres" class="btn-outline mt-6 w-full">Agendar estudio</a>
+            <ul class="check-list mt-7 space-y-3 border-t border-brand-line/60 pt-6">
+              <li>Protocolo farmacológico supervisado</li>
+              <li>Revisión de antecedentes y preparación</li>
+              <li>Informe especializado</li>
+              <li>Requiere orden médica</li>
+            </ul>
+          </article>
+        </div>
+
+        <!-- ---------- Panel: Valoraciones ejecutivas ---------- -->
+        <div role="tabpanel" id="panel-ejecutivas" aria-labelledby="tab-ejecutivas" hidden class="mx-auto mt-10 grid max-w-5xl gap-6 md:grid-cols-3">
+          <article class="card flex flex-col p-7">
+            <h3 class="text-xl font-semibold">Ejecutiva de medicina interna</h3>
+            <p class="mt-2 min-h-[3rem] text-[15px] text-brand-slate">Valoración integral con exámenes de control en una ruta coordinada.</p>
+            <p class="mt-6 font-display text-[2.4rem] font-semibold leading-none tracking-tight">$600.000</p>
+            <p class="mt-1 text-sm text-brand-slate">COP · por paciente</p>
+            <a href="#agendar" data-wa="citas" data-wa-service="Valoración ejecutiva de medicina interna" data-preselect="val_ejecutiva_mi" data-wa-source="plan_ejecutiva_mi" class="btn-outline mt-6 w-full">Agendar valoración</a>
+            <ul class="check-list mt-7 space-y-3 border-t border-brand-line/60 pt-6">
+              <li>Consulta integral de medicina interna</li>
+              <li>Exámenes de control del programa*</li>
+              <li>Entrega organizada de resultados</li>
+              <li>Control posterior si se indica</li>
+            </ul>
+          </article>
+
+          <article class="plan-dark relative flex flex-col rounded-3xl bg-brand-navy p-7 text-white shadow-lift">
+            <span class="absolute -top-3 left-7 rounded-full bg-brand-sky px-3 py-1 text-xs font-semibold text-brand-navy">La más completa</span>
+            <h3 class="text-xl font-semibold">Ejecutiva cardiovascular</h3>
+            <p class="mt-2 min-h-[3rem] text-[15px] text-white/70">Consulta y estudios cardiovasculares completos en una sola ruta.</p>
+            <p class="mt-6 font-display text-[2.4rem] font-semibold leading-none tracking-tight">$1.000.000</p>
+            <p class="mt-1 text-sm text-white/60">COP · por paciente</p>
+            <a href="#agendar" data-wa="citas" data-wa-service="Valoración ejecutiva cardiovascular" data-preselect="val_ejecutiva_cardio" data-wa-source="plan_ejecutiva_cardio" class="btn-light mt-6 w-full">Agendar valoración</a>
+            <ul class="check-list mt-7 space-y-3 border-t border-white/15 pt-6 text-white/90">
+              <li>Consulta de cardiología</li>
+              <li>Electrocardiograma</li>
+              <li>Ecocardiograma</li>
+              <li>Exámenes de control del programa*</li>
+            </ul>
+          </article>
+
+          <article class="flex flex-col rounded-3xl border border-dashed border-brand-line p-7">
+            <h3 class="text-xl font-semibold">Para empresas</h3>
+            <p class="mt-2 min-h-[3rem] text-[15px] text-brand-slate">Programas de valoración para directivos y colaboradores.</p>
+            <p class="mt-6 font-display text-[2.4rem] font-semibold leading-none tracking-tight">A la medida</p>
+            <p class="mt-1 text-sm text-brand-slate">Según volumen y alcance</p>
+            <a href="#agendar" data-wa="asesor" data-preselect="empresas" data-wa-source="plan_empresas" data-wa-message="Hola Santévit, quiero información sobre valoraciones ejecutivas para mi empresa." class="btn-outline mt-6 w-full">Solicitar propuesta</a>
+            <ul class="check-list mt-7 space-y-3 border-t border-brand-line/60 pt-6">
+              <li>Agenda coordinada para tu equipo</li>
+              <li>Informe empresarial anonimizado</li>
+              <li>Facturación corporativa</li>
+            </ul>
+          </article>
+        </div>
+
+        <p class="mx-auto mt-10 max-w-3xl text-center text-sm leading-relaxed text-brand-slate">
+          Precios en pesos colombianos por paciente, vigentes en 2026. <span data-footnote-ejecutivas>*Los exámenes de control se definen según el perfil del paciente y el criterio médico.</span> Medicamentos, insumos o estudios adicionales se cotizan aparte.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================== CÓMO FUNCIONA ============================== -->
+    <section id="como-funciona" class="scroll-mt-20 py-20 sm:py-24">
+      <div class="container-x">
+        <div class="max-w-2xl" data-reveal>
+          <p class="eyebrow">Tu ruta de atención</p>
+          <h2 class="section-title mt-3">De tu mensaje a tu resultado</h2>
+          <p class="section-lead">Coordinamos consulta, diagnóstico y seguimiento para que no pierdas tiempo.</p>
+        </div>
+        <ol class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <li class="tile" data-reveal>
+            <span class="num">01</span>
+            <h3 class="mt-5 text-lg font-semibold">Escríbenos</h3>
+            <p class="mt-2 text-[15px] leading-relaxed text-brand-slate">Te orientamos sobre el servicio, la preparación y el precio.</p>
+          </li>
+          <li class="tile" data-reveal>
+            <span class="num">02</span>
+            <h3 class="mt-5 text-lg font-semibold">Agenda</h3>
+            <p class="mt-2 text-[15px] leading-relaxed text-brand-slate">Confirmamos fecha, hora y profesional que te atenderá.</p>
+          </li>
+          <li class="tile" data-reveal>
+            <span class="num">03</span>
+            <h3 class="mt-5 text-lg font-semibold">Atención</h3>
+            <p class="mt-2 text-[15px] leading-relaxed text-brand-slate">Consulta o toma del examen con registro clínico.</p>
+          </li>
+          <li class="tile" data-reveal>
+            <span class="num">04</span>
+            <h3 class="mt-5 text-lg font-semibold">Resultado</h3>
+            <p class="mt-2 text-[15px] leading-relaxed text-brand-slate">Recibes tu informe y la definición de seguimiento si aplica.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============================== EQUIPO MÉDICO (se llena desde el panel) ============================== -->
+    <section id="equipo" class="scroll-mt-20 bg-brand-ice/60 py-20 sm:py-24" hidden>
+      <div class="container-x">
+        <div class="max-w-2xl" data-reveal>
+          <p class="eyebrow">Equipo médico</p>
+          <h2 class="section-title mt-3">Especialistas que te acompañan</h2>
+          <p class="section-lead">Profesionales habilitados, con criterio clínico y trato humano.</p>
+        </div>
+        <div id="equipo-grid" class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
+      </div>
+    </section>
+
+    <!-- ============================== TESTIMONIOS (se llenan desde el panel) ============================== -->
+    <section id="testimonios" class="scroll-mt-20 py-20 sm:py-24" hidden>
+      <div class="container-x">
+        <div class="mx-auto max-w-2xl text-center" data-reveal>
+          <p class="eyebrow">Testimonios</p>
+          <h2 class="section-title mt-3">Lo que dicen nuestros pacientes</h2>
+        </div>
+        <div id="testimonios-grid" class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3"></div>
+      </div>
+    </section>
+
+    <!-- ============================== EMPRESAS E INSTITUCIONES ============================== -->
+    <section id="empresas" class="scroll-mt-20 py-20 sm:py-24">
+      <div class="container-x">
+        <div class="max-w-2xl" data-reveal>
+          <p class="eyebrow">Empresas e instituciones</p>
+          <h2 class="section-title mt-3">Un solo ecosistema, múltiples capacidades</h2>
+          <p class="section-lead">Atención clínica, salud digital y tecnología biomédica. Cada solución se contrata por separado o integrada.</p>
+        </div>
+        <div class="mt-12 grid gap-6 lg:grid-cols-2">
+          <article class="tile flex flex-col p-8" data-reveal>
+            <p class="text-xs font-semibold uppercase tracking-[.18em] text-brand-slate">Programas empresariales</p>
+            <h3 class="mt-3 text-2xl font-semibold">Salud para tu equipo de trabajo</h3>
+            <p class="mt-3 leading-relaxed text-brand-slate">Valoraciones ejecutivas y rutas diagnósticas para directivos y colaboradores, con agenda coordinada.</p>
+            <ul class="check-list mt-6 space-y-3">
+              <li>Cuestionario previo de riesgo</li>
+              <li>Entrega organizada de resultados</li>
+              <li>Informe agregado y anonimizado</li>
+            </ul>
+            <a href="#agendar" data-wa="asesor" data-preselect="empresas" data-wa-source="b2b_empresas" data-wa-message="Hola Santévit, quiero información sobre programas de salud para mi empresa." class="btn-primary mt-8 self-start">Solicitar propuesta</a>
+          </article>
+          <article class="plan-dark flex flex-col rounded-3xl bg-brand-navy p-8 text-white" data-reveal>
+            <p class="text-xs font-semibold uppercase tracking-[.18em] text-brand-sky">Tecnología biomédica · Comen</p>
+            <h3 class="mt-3 text-2xl font-semibold">Equipos para IPS y clínicas</h3>
+            <p class="mt-3 leading-relaxed text-white/70">Electrocardiografía, monitorización, anestesia y ultrasonido portátil. Dos caminos para incorporarlos:</p>
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+              <div class="rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
+                <p class="text-xs uppercase tracking-wider text-white/60">Modelo 01</p>
+                <p class="mt-1 font-semibold">Compra tradicional</p>
+                <p class="mt-2 text-sm text-white/70">Equipo propio con instalación, garantía y soporte.</p>
+              </div>
+              <div class="rounded-2xl bg-white/10 p-5 ring-1 ring-brand-sky/40">
+                <p class="text-xs uppercase tracking-wider text-brand-sky">Modelo 02</p>
+                <p class="mt-1 font-semibold">Product as a Service</p>
+                <p class="mt-2 text-sm text-white/70">Tarifa mensual con soporte, mantenimiento y escalamiento.</p>
+              </div>
+            </div>
+            <a href="#agendar" data-wa="asesor" data-preselect="equipos_comen" data-wa-source="b2b_comen" data-wa-message="Hola Santévit, represento una IPS / consultorio y quiero información sobre los equipos Comen." class="btn-light mt-8 self-start">Hablar con un asesor</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== AGENDAR (FORMULARIO) ============================== -->
+    <section id="agendar" class="scroll-mt-20 bg-brand-ice/70 py-20 sm:py-24">
+      <div class="container-x grid gap-12 lg:grid-cols-[.9fr_1.1fr] lg:items-start">
+        <div data-reveal>
+          <p class="eyebrow">Agenda tu cita</p>
+          <h2 class="section-title mt-3">Te contactamos para coordinar tu atención</h2>
+          <p class="section-lead">Déjanos tus datos o escríbenos directamente. Confirmamos disponibilidad, preparación y precio.</p>
+          <div class="mt-8 space-y-3">
+            <a href="#agendar" data-wa="citas" data-wa-source="agendar_citas" class="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-card ring-1 ring-brand-line/60 transition hover:ring-brand-blue">
+              <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-wa/10 text-wa-dark"><svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6 2 11c0 2.6 1.2 4.9 3.2 6.6L4.5 22l4.4-2.3c1 .3 2 .4 3.1.4 5.5 0 10-4 10-9S17.5 2 12 2Zm-4 8h8v2H8v-2Zm0-3h8v2H8V7Zm0 6h5v2H8v-2Z"/></svg></span>
+              <span><span class="block font-semibold">Agendar una cita</span><span class="block text-sm text-brand-slate">WhatsApp de citas</span></span>
+              <span aria-hidden="true" class="ml-auto text-brand-slate">→</span>
+            </a>
+            <a href="#agendar" data-wa="asesor" data-wa-source="agendar_asesor" class="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-card ring-1 ring-brand-line/60 transition hover:ring-brand-blue">
+              <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-ice text-brand-blue"><svg aria-hidden="true" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+              <span><span class="block font-semibold">Hablar con un asesor</span><span class="block text-sm text-brand-slate">Orientación, empresas y equipos</span></span>
+              <span aria-hidden="true" class="ml-auto text-brand-slate">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div id="contacto" class="scroll-mt-24">
+          <form id="lead-form" class="card p-6 sm:p-8" novalidate aria-labelledby="form-title">
+            <h3 id="form-title" class="text-xl font-semibold">Déjanos tus datos</h3>
+            <p class="mt-1 text-sm text-brand-slate">Un asesor te contacta para agendar.</p>
+
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+              <div class="sm:col-span-2">
                 <label for="f-nombre" class="field-label">Nombre completo</label>
                 <input id="f-nombre" name="nombre" type="text" class="field" autocomplete="name" required minlength="2" maxlength="100" placeholder="Ej. Ana María Gómez" />
                 <p class="field-error" data-error-for="nombre" hidden></p>
@@ -119,7 +442,7 @@
               <div>
                 <label for="f-telefono" class="field-label">Celular</label>
                 <div class="flex">
-                  <span class="inline-flex items-center rounded-l-xl border border-r-0 border-brand-navy/20 bg-slate-50 px-3 text-sm font-semibold">+57</span>
+                  <span class="inline-flex items-center rounded-l-xl border border-r-0 border-brand-line bg-brand-ice px-3 text-sm font-semibold">+57</span>
                   <input id="f-telefono" name="telefono" type="tel" inputmode="numeric" class="field rounded-l-none" autocomplete="tel-national" required maxlength="15" placeholder="300 123 4567" />
                 </div>
                 <p class="field-error" data-error-for="telefono" hidden></p>
@@ -129,26 +452,39 @@
                 <input id="f-correo" name="correo" type="email" class="field" autocomplete="email" required maxlength="254" placeholder="tucorreo@ejemplo.com" />
                 <p class="field-error" data-error-for="correo" hidden></p>
               </div>
-              <div>
+              <div class="sm:col-span-2">
                 <label for="f-servicio" class="field-label">Servicio de interés</label>
                 <select id="f-servicio" name="servicio" class="field" required>
                   <option value="">Selecciona una opción</option>
-                  <option value="express">Electrocardiograma Express</option>
-                  <option value="cardiometabolico">Chequeo Cardiometabólico</option>
-                  <option value="segunda_opinion">Segunda Opinión</option>
-                  <option value="equipos_comen">Equipos Comen (IPS / consultorios)</option>
+                  <optgroup label="Consultas">
+                    <option value="consulta_cardiologia">Consulta de cardiología — $400.000</option>
+                    <option value="consulta_medicina_interna">Consulta de medicina interna — $300.000</option>
+                  </optgroup>
+                  <optgroup label="Diagnóstico">
+                    <option value="ecg">Electrocardiograma de 12 canales — $130.000</option>
+                    <option value="eco_transtoracico">Ecocardiograma transtorácico — $365.000</option>
+                    <option value="eco_estres">Ecocardiograma de estrés — $625.000</option>
+                  </optgroup>
+                  <optgroup label="Valoraciones ejecutivas">
+                    <option value="val_ejecutiva_cardio">Ejecutiva cardiovascular — $1.000.000</option>
+                    <option value="val_ejecutiva_mi">Ejecutiva de medicina interna — $600.000</option>
+                  </optgroup>
+                  <optgroup label="Empresas e instituciones">
+                    <option value="empresas">Programa para empresas</option>
+                    <option value="equipos_comen">Equipos Comen (IPS / clínicas)</option>
+                  </optgroup>
                   <option value="no_seguro">Aún no sé, necesito orientación</option>
                 </select>
                 <p class="field-error" data-error-for="servicio" hidden></p>
               </div>
-              <fieldset>
+              <fieldset class="sm:col-span-2">
                 <legend class="field-label">¿Necesitas atención en las próximas 48 horas?</legend>
                 <div class="grid grid-cols-2 gap-2">
-                  <label class="flex cursor-pointer items-center gap-2 rounded-xl border border-brand-navy/20 px-4 py-3 has-[:checked]:border-brand-sky has-[:checked]:bg-brand-sky/10">
-                    <input type="radio" name="urgente_48h" value="si" class="accent-brand-orange" /> Sí, es prioritario
+                  <label class="flex cursor-pointer items-center gap-2 rounded-xl border border-brand-line px-4 py-3 text-[15px] has-[:checked]:border-brand-blue has-[:checked]:bg-brand-ice">
+                    <input type="radio" name="urgente_48h" value="si" class="accent-brand-navy" /> Sí, es prioritario
                   </label>
-                  <label class="flex cursor-pointer items-center gap-2 rounded-xl border border-brand-navy/20 px-4 py-3 has-[:checked]:border-brand-sky has-[:checked]:bg-brand-sky/10">
-                    <input type="radio" name="urgente_48h" value="no" class="accent-brand-orange" checked /> No, puedo esperar
+                  <label class="flex cursor-pointer items-center gap-2 rounded-xl border border-brand-line px-4 py-3 text-[15px] has-[:checked]:border-brand-blue has-[:checked]:bg-brand-ice">
+                    <input type="radio" name="urgente_48h" value="no" class="accent-brand-navy" checked /> No, puedo esperar
                   </label>
                 </div>
               </fieldset>
@@ -160,252 +496,107 @@
               </div>
 
               <!-- Autorización de tratamiento de datos — Ley 1581 de 2012 -->
-              <div>
-                <label class="flex items-start gap-3 text-sm leading-snug">
-                  <input id="f-consent" name="consent" type="checkbox" class="mt-0.5 h-5 w-5 shrink-0 accent-brand-orange" required />
-                  <span>Autorizo a Santévit IPS a tratar mis datos personales para contactarme y agendar el servicio, según la <a href="privacidad.html" target="_blank" rel="noopener" class="font-semibold text-brand-sky underline">Política de Tratamiento de Datos</a> (Ley 1581 de 2012).</span>
+              <div class="sm:col-span-2">
+                <label class="flex items-start gap-3 text-sm leading-snug text-brand-slate">
+                  <input id="f-consent" name="consent" type="checkbox" class="mt-0.5 h-5 w-5 shrink-0 accent-brand-navy" required />
+                  <span>Autorizo a Santévit IPS a tratar mis datos personales para contactarme y agendar el servicio, según la <a href="privacidad.html" target="_blank" rel="noopener" class="font-semibold text-brand-navy underline">Política de Tratamiento de Datos</a> (Ley 1581 de 2012).</span>
                 </label>
                 <p class="field-error" data-error-for="consent" hidden></p>
               </div>
             </div>
 
-            <button id="lead-submit" type="submit" class="btn-primary mt-6 w-full text-lg">
+            <button id="lead-submit" type="submit" class="btn-primary mt-6 w-full py-3.5 text-base">
               <span data-label>Quiero que me contacten</span>
               <svg data-spinner hidden class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity=".3"/><path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" stroke-width="3"/></svg>
             </button>
             <p id="form-status" class="mt-3 text-center text-sm" role="status" aria-live="polite"></p>
-            <p class="mt-2 text-center text-xs text-brand-navy/60">🔒 Tus datos viajan cifrados y no se comparten con terceros.</p>
+            <p class="mt-2 text-center text-xs text-brand-slate">🔒 Tus datos viajan cifrados y no se comparten con terceros.</p>
           </form>
 
           <!-- Mensaje de éxito -->
-          <div id="lead-success" class="card text-center text-brand-navy" hidden tabindex="-1">
-            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-mint/20 text-brand-mint">
-              <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>
+          <div id="lead-success" class="card p-8 text-center" hidden tabindex="-1">
+            <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-ice text-brand-blue">
+              <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>
             </div>
-            <h2 class="mt-4 text-2xl font-bold">¡Recibimos tus datos!</h2>
-            <p class="mt-2 text-brand-navy/75">Un asesor te contactará muy pronto. Si quieres avanzar ya mismo, escríbenos por WhatsApp.</p>
-            <a href="#contacto" id="success-wa" data-wa="citas" data-wa-source="form_success" class="btn-wa mt-5 w-full">Continuar por WhatsApp</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================== SERVICIOS ============================== -->
-    <section id="servicios" class="scroll-mt-20 bg-slate-50 py-16 md:py-24">
-      <div class="container-x">
-        <div class="max-w-2xl">
-          <p class="eyebrow">Nuestros planes</p>
-          <h2 class="section-title mt-3">Elige el nivel de diagnóstico que necesitas</h2>
-          <p class="mt-4 text-lg text-brand-navy/75">Tres opciones claras, sin filas ni trámites largos. Todas incluyen lectura por médico especialista.</p>
-        </div>
-
-        <div class="mt-10 grid gap-6 md:grid-cols-3">
-          <!-- Plan 1 -->
-          <article class="card flex flex-col">
-            <span class="w-fit rounded-full bg-brand-sky/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-navy">Más rápido</span>
-            <h3 class="mt-4 text-2xl font-bold">ECG Express</h3>
-            <p class="mt-2 text-brand-navy/75">Para requisitos laborales, deportivos, prequirúrgicos o control.</p>
-            <ul class="mb-8 mt-5 space-y-2.5 text-[15px]">
-              <li class="flex gap-2"><span class="text-brand-mint">✔</span>Electrocardiograma de 12 derivaciones</li>
-              <li class="flex gap-2"><span class="text-brand-mint">✔</span>Lectura especializada en menos de 24 h</li>
-              <li class="flex gap-2"><span class="text-brand-mint">✔</span>Resultado en PDF por correo o WhatsApp</li>
-            </ul>
-            <a href="#contacto" data-wa="citas" data-wa-service="ECG Express" data-wa-source="plan_express" class="btn-ghost mt-auto">Agendar Express</a>
-          </article>
-
-          <!-- Plan 2 (destacado) -->
-          <article class="card relative flex flex-col bg-brand-navy text-white ring-2 ring-brand-sky">
-            <span class="w-fit rounded-full bg-brand-orange px-3 py-1 text-xs font-bold uppercase tracking-wider">Más completo</span>
-            <h3 class="mt-4 text-2xl font-bold">Chequeo Cardiometabólico</h3>
-            <p class="mt-2 text-white/75">Para conocer tu riesgo cardiovascular de forma integral.</p>
-            <ul class="mb-8 mt-5 space-y-2.5 text-[15px]">
-              <li class="flex gap-2"><span class="text-brand-mint">✔</span>Todo lo del plan Express</li>
-              <li class="flex gap-2"><span class="text-brand-mint">✔</span>Toma de tensión arterial y medidas corporales</li>
-              <li class="flex gap-2"><span class="text-brand-mint">✔</span>Exámenes de laboratorio cardiometabólicos*</li>
-              <li class="flex gap-2"><span class="text-brand-mint">✔</span>Orientación médica con tus resultados</li>
-            </ul>
-            <p class="-mt-5 mb-8 text-xs text-white/60">*El asesor te confirma los exámenes incluidos.</p>
-            <a href="#contacto" data-wa="citas" data-wa-service="Chequeo Cardiometabólico" data-wa-source="plan_cardiometabolico" class="btn-primary mt-auto">Agendar chequeo</a>
-          </article>
-
-          <!-- Plan 3 -->
-          <article class="card flex flex-col">
-            <span class="w-fit rounded-full bg-brand-mint/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-navy">Tranquilidad</span>
-            <h3 class="mt-4 text-2xl font-bold">Segunda Opinión</h3>
-            <p class="mt-2 text-brand-navy/75">¿Ya tienes un electrocardiograma o estudio y quieres otra lectura?</p>
-            <ul class="mb-8 mt-5 space-y-2.5 text-[15px]">
-              <li class="flex gap-2"><span class="text-brand-mint">✔</span>Revisión de tu ECG o estudios previos</li>
-              <li class="flex gap-2"><span class="text-brand-mint">✔</span>Concepto escrito por especialista</li>
-              <li class="flex gap-2"><span class="text-brand-mint">✔</span>Envío de documentos 100% digital</li>
-            </ul>
-            <a href="#contacto" data-wa="citas" data-wa-service="Segunda Opinión" data-wa-source="plan_segunda_opinion" class="btn-ghost mt-auto">Solicitar segunda opinión</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================== CÓMO FUNCIONA ============================== -->
-    <section id="como-funciona" class="scroll-mt-20 py-16 md:py-24">
-      <div class="container-x">
-        <p class="eyebrow">Así de simple</p>
-        <h2 class="section-title mt-3">Tu resultado en 3 pasos</h2>
-        <ol class="mt-10 grid gap-6 md:grid-cols-3">
-          <li class="relative rounded-3xl border border-brand-navy/10 p-6">
-            <span class="font-display text-5xl font-bold text-brand-sky/40">01</span>
-            <h3 class="mt-2 text-xl font-bold">Escríbenos</h3>
-            <p class="mt-2 text-brand-navy/75">Por WhatsApp o el formulario. Un asesor te responde en menos de 5 minutos en horario de atención.</p>
-          </li>
-          <li class="relative rounded-3xl border border-brand-navy/10 p-6">
-            <span class="font-display text-5xl font-bold text-brand-sky/40">02</span>
-            <h3 class="mt-2 text-xl font-bold">Toma del examen</h3>
-            <p class="mt-2 text-brand-navy/75">Agendamos tu cita. La toma del electrocardiograma dura pocos minutos y no duele.</p>
-          </li>
-          <li class="relative rounded-3xl border border-brand-navy/10 p-6">
-            <span class="font-display text-5xl font-bold text-brand-sky/40">03</span>
-            <h3 class="mt-2 text-xl font-bold">Recibe tu lectura</h3>
-            <p class="mt-2 text-brand-navy/75">En menos de 24 horas recibes el informe firmado por el especialista en tu correo o WhatsApp.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <!-- ============================== CONFIANZA MÉDICA ============================== -->
-    <section aria-labelledby="confianza-title" class="bg-brand-navy py-16 text-white md:py-20">
-      <div class="container-x">
-        <h2 id="confianza-title" class="section-title max-w-2xl">Diagnóstico serio, con tecnología a tu favor</h2>
-        <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <div class="rounded-3xl bg-white/5 p-6 ring-1 ring-white/10">
-            <svg class="h-9 w-9 text-brand-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.5-7 10-7 10Z"/></svg>
-            <h3 class="mt-4 text-lg font-bold">Lectura por especialista</h3>
-            <p class="mt-2 text-sm text-white/70">Cada trazado lo interpreta un médico, no solo un software.</p>
-          </div>
-          <div class="rounded-3xl bg-white/5 p-6 ring-1 ring-white/10">
-            <svg class="h-9 w-9 text-brand-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg>
-            <h3 class="mt-4 text-lg font-bold">Equipos Comen H12</h3>
-            <p class="mt-2 text-sm text-white/70">Electrocardiógrafo digital de 12 canales para trazados nítidos.</p>
-          </div>
-          <div class="rounded-3xl bg-white/5 p-6 ring-1 ring-white/10">
-            <svg class="h-9 w-9 text-brand-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-            <h3 class="mt-4 text-lg font-bold">Datos protegidos</h3>
-            <p class="mt-2 text-sm text-white/70">Tratamiento conforme a la Ley 1581 de 2012 y conexión cifrada.</p>
-          </div>
-          <div class="rounded-3xl bg-white/5 p-6 ring-1 ring-white/10">
-            <svg class="h-9 w-9 text-brand-sky" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 12l2 2 4-4"/><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/></svg>
-            <h3 class="mt-4 text-lg font-bold">IPS habilitada</h3>
-            <p class="mt-2 text-sm text-white/70">Código REPS: <span data-config="REPS_CODE">Por definir</span></p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================== B2B: EQUIPOS COMEN ============================== -->
-    <section id="equipos" class="scroll-mt-20 py-16 md:py-24">
-      <div class="container-x grid gap-10 md:grid-cols-2 md:items-center">
-        <div>
-          <p class="eyebrow">Para IPS, clínicas y consultorios</p>
-          <h2 class="section-title mt-3">Lleva el electrocardiógrafo Comen H12 a tu institución</h2>
-          <p class="mt-4 text-lg text-brand-navy/75">Somos aliados de la marca Comen. Te ayudamos a incorporar electrocardiografía digital con el modelo que mejor se ajuste a tu flujo de pacientes.</p>
-          <div class="mt-8 grid gap-4 sm:grid-cols-3">
-            <div class="rounded-2xl border border-brand-navy/10 p-4"><p class="font-display text-lg font-bold">Venta</p><p class="mt-1 text-sm text-brand-navy/70">Equipo propio con soporte.</p></div>
-            <div class="rounded-2xl border border-brand-navy/10 p-4"><p class="font-display text-lg font-bold">Renta</p><p class="mt-1 text-sm text-brand-navy/70">Cuota mensual fija.</p></div>
-            <div class="rounded-2xl border-2 border-brand-sky bg-brand-sky/5 p-4"><p class="font-display text-lg font-bold">PaaS</p><p class="mt-1 text-sm text-brand-navy/70">Pago por uso, sin inversión inicial.</p></div>
-          </div>
-          <a href="#contacto" data-wa="asesor" data-preselect="equipos_comen" data-wa-source="b2b_comen" data-wa-message="Hola Santévit, represento una IPS / consultorio y quiero información sobre el electrocardiógrafo Comen H12." class="btn-primary mt-8">Solicitar asesoría comercial</a>
-        </div>
-        <div class="rounded-[2rem] bg-gradient-to-br from-brand-sky/20 to-brand-mint/20 p-8">
-          <!-- Reemplazar por foto oficial del equipo: assets/img/comen-h12.webp -->
-          <div class="rounded-3xl bg-white p-6 shadow-card">
-            <div class="flex items-center justify-between">
-              <p class="font-display font-bold">Comen H12</p>
-              <span class="rounded-full bg-brand-mint/20 px-3 py-1 text-xs font-bold">12 canales</span>
-            </div>
-            <svg aria-hidden="true" class="mt-6 h-28 w-full" viewBox="0 0 300 100" preserveAspectRatio="none">
-              <path d="M0 60h50l8-14 7 14h22l8-46 10 80 8-50 6 16h56l8-14 7 14h22l8-46 10 80 8-50 6 16h50" fill="none" stroke="#E04403" stroke-width="2.5" stroke-linejoin="round"/>
-            </svg>
-            <ul class="mt-6 space-y-2 text-sm text-brand-navy/80">
-              <li>• Registro digital de 12 derivaciones</li>
-              <li>• Reportes listos para lectura remota</li>
-              <li>• Capacitación y acompañamiento de implementación</li>
-            </ul>
+            <h3 class="mt-4 text-2xl font-semibold">¡Recibimos tus datos!</h3>
+            <p class="mt-2 text-brand-slate">Un asesor te contactará muy pronto. Si quieres avanzar ya mismo, escríbenos por WhatsApp.</p>
+            <a href="#agendar" id="success-wa" data-wa="citas" data-wa-source="form_success" class="btn-wa mt-6 w-full">Continuar por WhatsApp</a>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ============================== PREGUNTAS FRECUENTES ============================== -->
-    <section id="preguntas" class="scroll-mt-20 bg-slate-50 py-16 md:py-24">
-      <div class="container-x max-w-3xl">
-        <p class="eyebrow">Resolvemos tus dudas</p>
-        <h2 class="section-title mt-3">Preguntas frecuentes</h2>
-        <div class="mt-8 divide-y divide-brand-navy/10 rounded-3xl bg-white px-6 shadow-card">
-          <details class="faq-item">
-            <summary>¿Cuánto tarda la toma del electrocardiograma?<span class="faq-icon text-2xl text-brand-sky transition">+</span></summary>
-            <p class="pb-5 text-brand-navy/75">La toma dura pocos minutos. Te ubicamos unos electrodos en el pecho, brazos y piernas; es indoloro y no requiere agujas.</p>
-          </details>
-          <details class="faq-item">
-            <summary>¿Cuándo recibo la lectura del especialista?<span class="faq-icon text-2xl text-brand-sky transition">+</span></summary>
-            <p class="pb-5 text-brand-navy/75">En menos de 24 horas después de la toma recibes el informe en PDF por correo o WhatsApp.</p>
-          </details>
-          <details class="faq-item">
-            <summary>¿Necesito preparación especial?<span class="faq-icon text-2xl text-brand-sky transition">+</span></summary>
-            <p class="pb-5 text-brand-navy/75">Para el ECG no necesitas ayuno. Te recomendamos ropa cómoda y evitar cremas en el pecho ese día. Si tomas el Chequeo Cardiometabólico, el asesor te indicará si los exámenes de laboratorio requieren ayuno.</p>
-          </details>
-          <details class="faq-item">
-            <summary>¿Puedo pedir una segunda opinión de un examen hecho en otro lugar?<span class="faq-icon text-2xl text-brand-sky transition">+</span></summary>
-            <p class="pb-5 text-brand-navy/75">Sí. Envíanos el trazado o el informe por WhatsApp y un especialista emite su concepto por escrito.</p>
-          </details>
-          <details class="faq-item">
-            <summary>¿Qué medios de pago aceptan?<span class="faq-icon text-2xl text-brand-sky transition">+</span></summary>
-            <p class="pb-5 text-brand-navy/75">El asesor te confirma las opciones disponibles al agendar tu cita.</p>
-          </details>
-          <details class="faq-item">
-            <summary>¿Este servicio reemplaza una urgencia?<span class="faq-icon text-2xl text-brand-sky transition">+</span></summary>
-            <p class="pb-5 text-brand-navy/75"><strong>No.</strong> Si tienes dolor en el pecho, dificultad para respirar, desmayo o palpitaciones intensas, acude de inmediato a un servicio de urgencias o llama a la línea 123.</p>
-          </details>
-          <details class="faq-item">
-            <summary>¿Cómo protegen mis datos?<span class="faq-icon text-2xl text-brand-sky transition">+</span></summary>
-            <p class="pb-5 text-brand-navy/75">Tus datos viajan cifrados, solo personal autorizado puede verlos y los usamos únicamente para contactarte. Consulta nuestra <a href="privacidad.html" class="font-semibold text-brand-sky underline">Política de Tratamiento de Datos</a>.</p>
-          </details>
+    <section id="preguntas" class="scroll-mt-20 py-20 sm:py-24">
+      <div class="container-x grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
+        <div data-reveal>
+          <p class="eyebrow">Preguntas frecuentes</p>
+          <h2 class="section-title mt-3">Resolvemos tus dudas</h2>
+          <p class="section-lead">¿No encuentras tu respuesta? Escríbenos y te ayudamos.</p>
         </div>
-      </div>
-    </section>
-
-    <!-- ============================== CTA FINAL ============================== -->
-    <section class="py-16 md:py-20">
-      <div class="container-x">
-        <div class="rounded-[2rem] bg-gradient-to-r from-brand-navy to-[#0b3d58] px-6 py-12 text-center text-white sm:px-12">
-          <h2 class="section-title">Tu corazón no espera. Nosotros tampoco.</h2>
-          <p class="mx-auto mt-4 max-w-xl text-lg text-white/80">Escríbenos ahora y agenda tu electrocardiograma con lectura especializada en menos de 24 horas.</p>
-          <a href="#contacto" data-wa="citas" data-wa-source="cta_final" class="btn-wa mt-8 text-lg">Agendar por WhatsApp</a>
+        <div class="divide-y divide-brand-line/70 border-y border-brand-line/70">
+          <details class="faq-item">
+            <summary>¿Necesito orden médica?<span class="faq-icon text-2xl font-light text-brand-blue transition">+</span></summary>
+            <p class="pb-5 leading-relaxed text-brand-slate">Para las consultas no. Para los ecocardiogramas sí se requiere orden médica. El electrocardiograma se puede tomar con orden o como control; te orientamos antes de agendar.</p>
+          </details>
+          <details class="faq-item">
+            <summary>¿Qué incluye la consulta de cardiología?<span class="faq-icon text-2xl font-light text-brand-blue transition">+</span></summary>
+            <p class="pb-5 leading-relaxed text-brand-slate">Historia clínica, examen cardiovascular, electrocardiograma de 12 canales y definición de conducta. Si el especialista lo indica, se programa el ecocardiograma u otros estudios.</p>
+          </details>
+          <details class="faq-item">
+            <summary>¿Cuándo recibo mis resultados?<span class="faq-icon text-2xl font-light text-brand-blue transition">+</span></summary>
+            <p class="pb-5 leading-relaxed text-brand-slate">Depende del servicio. Al confirmar tu cita te informamos el tiempo de entrega y el medio por el que recibirás tu informe.</p>
+          </details>
+          <details class="faq-item">
+            <summary>¿Necesito preparación especial?<span class="faq-icon text-2xl font-light text-brand-blue transition">+</span></summary>
+            <p class="pb-5 leading-relaxed text-brand-slate">Para el electrocardiograma no necesitas ayuno; te recomendamos ropa cómoda. El ecocardiograma de estrés y las valoraciones ejecutivas tienen preparación específica que te indicamos al agendar.</p>
+          </details>
+          <details class="faq-item">
+            <summary>¿Este servicio reemplaza una urgencia?<span class="faq-icon text-2xl font-light text-brand-blue transition">+</span></summary>
+            <p class="pb-5 leading-relaxed text-brand-slate"><strong class="text-brand-navy">No.</strong> Si tienes dolor en el pecho, dificultad para respirar, desmayo o palpitaciones intensas, acude de inmediato a un servicio de urgencias o llama a la línea 123.</p>
+          </details>
+          <details class="faq-item">
+            <summary>¿Cómo protegen mis datos?<span class="faq-icon text-2xl font-light text-brand-blue transition">+</span></summary>
+            <p class="pb-5 leading-relaxed text-brand-slate">Tus datos viajan cifrados, solo personal autorizado puede verlos y se usan únicamente para contactarte. Consulta nuestra <a href="privacidad.html" class="font-semibold text-brand-navy underline">Política de Tratamiento de Datos</a>.</p>
+          </details>
         </div>
       </div>
     </section>
   </main>
 
   <!-- ============================== FOOTER ============================== -->
-  <footer class="border-t border-brand-navy/10 py-10 text-sm">
-    <div class="container-x flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-      <div>
-        <p class="font-display text-lg font-bold">santévit <span class="text-brand-sky">I.P.S.</span></p>
-        <p class="mt-2 text-brand-navy/70"><span data-config="ADDRESS">Bogotá D.C., Colombia</span> · <span data-config="CONTACT_EMAIL">contacto@santevit.com</span></p>
-        <p class="mt-1 text-brand-navy/70">Código REPS: <span data-config="REPS_CODE">Por definir</span></p>
+  <footer class="bg-brand-navy py-14 text-white">
+    <div class="container-x flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+      <div class="max-w-sm">
+        <p class="font-display text-xl font-semibold">santévit <span class="font-medium text-brand-sky">IPS</span></p>
+        <p class="mt-3 text-sm leading-relaxed text-white/60">Atención clínica, datos y tecnología para una salud más conectada.</p>
       </div>
-      <div class="flex flex-col gap-2 md:items-end">
-        <a href="privacidad.html" class="font-semibold text-brand-sky hover:underline">Política de Tratamiento de Datos</a>
-        <p class="text-brand-navy/50">© <span id="year">2026</span> Santévit IPS. Todos los derechos reservados.</p>
+      <div class="grid gap-8 text-sm sm:grid-cols-2 md:gap-16">
+        <div class="space-y-2 text-white/70">
+          <p class="text-xs font-semibold uppercase tracking-[.18em] text-white/40">Contacto</p>
+          <p data-config="ADDRESS">Bogotá D.C., Colombia</p>
+          <p data-config="CONTACT_EMAIL">contacto@santevit.com</p>
+          <p>Código REPS: <span data-config="REPS_CODE">Por definir</span></p>
+        </div>
+        <div class="space-y-2 text-white/70">
+          <p class="text-xs font-semibold uppercase tracking-[.18em] text-white/40">Información</p>
+          <p><a href="#tarifas" class="hover:text-white">Servicios y tarifas</a></p>
+          <p><a href="privacidad.html" class="hover:text-white">Política de Tratamiento de Datos</a></p>
+        </div>
       </div>
     </div>
+    <div class="container-x mt-10 border-t border-white/10 pt-6 text-xs text-white/40">© <span id="year">2026</span> Santévit IPS. Todos los derechos reservados.</div>
   </footer>
 
   <!-- ============================== CTA FLOTANTES ============================== -->
-  <!-- Escritorio: botón circular -->
-  <a href="#contacto" data-wa="asesor" data-wa-source="flotante" class="wa-pulse fixed bottom-6 right-6 z-50 hidden h-16 w-16 items-center justify-center rounded-full bg-wa text-white shadow-card md:flex" aria-label="Habla con un asesor por WhatsApp">
-    <svg aria-hidden="true" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6 2 11c0 2.6 1.2 4.9 3.2 6.6L4.5 22l4.4-2.3c1 .3 2 .4 3.1.4 5.5 0 10-4 10-9S17.5 2 12 2Zm-4 8h8v2H8v-2Zm0-3h8v2H8V7Zm0 6h5v2H8v-2Z"/></svg>
+  <!-- Escritorio: botón circular (línea de asesor) -->
+  <a href="#agendar" data-wa="asesor" data-wa-source="flotante" class="wa-pulse fixed bottom-6 right-6 z-50 hidden h-14 w-14 items-center justify-center rounded-full bg-wa text-white shadow-lift md:flex" aria-label="Habla con un asesor por WhatsApp">
+    <svg aria-hidden="true" class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6 2 11c0 2.6 1.2 4.9 3.2 6.6L4.5 22l4.4-2.3c1 .3 2 .4 3.1.4 5.5 0 10-4 10-9S17.5 2 12 2Zm-4 8h8v2H8v-2Zm0-3h8v2H8V7Zm0 6h5v2H8v-2Z"/></svg>
   </a>
   <!-- Móvil: barra inferior fija -->
-  <div class="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-brand-navy/10 bg-white/95 p-3 pb-[max(.75rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
-    <a href="#contacto" class="btn-ghost px-3 py-3 text-sm">Dejar mis datos</a>
-    <a href="#contacto" data-wa="citas" data-wa-source="barra_movil" class="btn-wa px-3 py-3 text-sm">WhatsApp</a>
+  <div class="fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 gap-2 border-t border-brand-line/60 bg-white/95 p-3 pb-[max(.75rem,env(safe-area-inset-bottom))] backdrop-blur md:hidden">
+    <a href="#tarifas" class="btn-outline px-3 py-3 text-sm">Ver tarifas</a>
+    <a href="#agendar" data-wa="citas" data-wa-source="barra_movil" class="btn-primary px-3 py-3 text-sm">WhatsApp</a>
   </div>
 </body>
 </html>

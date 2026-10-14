@@ -41,7 +41,9 @@ service cloud.firestore {
         && d.telefono is string && d.telefono.matches('^\\+57(3[0-9]{9}|60[0-9]{8})$')
         && d.correo is string && d.correo.size() <= 254
         && d.correo.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]{2,}$')
-        && d.servicio in ['express', 'cardiometabolico', 'segunda_opinion', 'equipos_comen', 'no_seguro']
+        && d.servicio in ['consulta_medicina_interna', 'consulta_cardiologia', 'ecg',
+                         'eco_transtoracico', 'eco_estres', 'val_ejecutiva_mi',
+                         'val_ejecutiva_cardio', 'empresas', 'equipos_comen', 'no_seguro']
         && d.urgente_48h is bool
         && d.acepta_tratamiento == true
         && d.consentimiento_version is string && d.consentimiento_version.size() <= 30
@@ -113,6 +115,32 @@ service cloud.firestore {
         && request.resource.data.at == request.time
         && request.resource.data.action in ['update', 'delete'];
       allow update, delete: if false;
+    }
+
+    // ---------- Reseñas, testimonios y equipo médico (se gestionan en el panel) ----------
+    // El público solo ve las publicadas. Solo los admins crean, editan o borran.
+    function validReview(d) {
+      return d.keys().hasOnly(['tipo', 'nombre', 'rol', 'texto', 'estrellas', 'registro',
+                               'foto', 'publicado', 'orden', 'autorizacion', 'updated_at', 'updated_by'])
+        && d.keys().hasAll(['tipo', 'nombre', 'texto', 'publicado', 'orden', 'autorizacion', 'updated_at', 'updated_by'])
+        && d.tipo in ['paciente', 'medico']
+        && d.nombre is string && d.nombre.size() >= 2 && d.nombre.size() <= 80
+        && d.texto is string && d.texto.size() <= 700
+        && d.publicado is bool
+        && d.orden is int && d.orden >= 0 && d.orden <= 999
+        && d.autorizacion == true
+        && optStr(d, 'rol', 80) && optStr(d, 'registro', 40)
+        && (!('estrellas' in d) || (d.estrellas is int && d.estrellas >= 0 && d.estrellas <= 5))
+        && (!('foto' in d) || d.foto == null
+            || (d.foto is string && d.foto.size() <= 400000
+                && d.foto.matches('^data:image/(webp|jpeg|png);base64,.*')))
+        && d.updated_at == request.time
+        && d.updated_by == request.auth.uid;
+    }
+    match /reviews/{id} {
+      allow read: if resource.data.publicado == true || isAdmin();
+      allow create, update: if isAdmin() && validReview(request.resource.data);
+      allow delete: if isAdmin();
     }
 
     // ---------- Todo lo demás: cerrado ----------

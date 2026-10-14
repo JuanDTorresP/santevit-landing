@@ -23,12 +23,25 @@
   const TZ = "America/Bogota";
   const PAGE_SIZE = 25;
 
+  // Servicios actuales del portafolio 2026 (orden de la gráfica y del filtro)
   const SERVICES = {
-    express: "ECG Express",
-    cardiometabolico: "Cardiometabólico",
-    segunda_opinion: "Segunda Opinión",
+    consulta_cardiologia: "Consulta cardiología",
+    consulta_medicina_interna: "Consulta medicina interna",
+    ecg: "Electrocardiograma",
+    eco_transtoracico: "Eco transtorácico",
+    eco_estres: "Eco de estrés",
+    val_ejecutiva_cardio: "Ejecutiva cardiovascular",
+    val_ejecutiva_mi: "Ejecutiva medicina interna",
+    empresas: "Programa empresas",
     equipos_comen: "Equipos Comen (B2B)",
     no_seguro: "Necesita orientación",
+  };
+  // Nombres de servicios de la primera versión (para leads antiguos)
+  const SERVICE_LABELS = {
+    ...SERVICES,
+    express: "ECG Express (v1)",
+    cardiometabolico: "Cardiometabólico (v1)",
+    segunda_opinion: "Segunda Opinión (v1)",
   };
   const ESTADOS = ["nuevo", "contactado", "agendado", "atendido", "descartado"];
   const COLOR_LEADS = "#2E8FCB"; // azul marca (paso validado para gráficas)
@@ -164,6 +177,22 @@
         });
         await b.commit();
       },
+      // ---- Reseñas y equipo médico ----
+      async reviewsList() {
+        const snap = await F.getDocs(F.collection(db, "reviews"));
+        return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      },
+      async reviewSave(id, data) {
+        const ref = id ? F.doc(db, "reviews", id) : F.doc(F.collection(db, "reviews"));
+        const b = F.writeBatch(db);
+        b.set(ref, { ...data, updated_at: F.serverTimestamp(), updated_by: auth.currentUser.uid });
+        await b.commit();
+      },
+      async reviewDelete(id) {
+        const b = F.writeBatch(db);
+        b.delete(F.doc(db, "reviews", id));
+        await b.commit();
+      },
     };
   }
 
@@ -171,7 +200,7 @@
   function demoApi() {
     const NAMES = ["Laura Gómez", "Carlos Rodríguez", "Andrea Martínez", "Jorge Ramírez", "Paola Castro", "Luis Hernández", "Diana Torres", "Felipe Rojas", "Camila Vargas", "Andrés Moreno", "Natalia Díaz", "Sergio Pardo"];
     const SRC = ["google_ads", "google_ads", "meta_ads", "meta_ads", "google_organico", "directo", "referido"];
-    const SERV = ["express", "express", "express", "cardiometabolico", "cardiometabolico", "segunda_opinion", "equipos_comen", "no_seguro"];
+    const SERV = ["ecg", "ecg", "ecg", "consulta_cardiologia", "consulta_cardiologia", "consulta_medicina_interna", "eco_transtoracico", "val_ejecutiva_cardio", "empresas", "no_seguro"];
     let seed = 7;
     const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
     const today = ymd(new Date());
@@ -209,6 +238,20 @@
       async sources(f, t) { return buildSources(stats.filter((x) => inRange(x.day, f, t)), await this.leads(f, t)); },
       async update(id, patch) { Object.assign(leads.find((l) => l.id === id) || {}, patch); },
       async remove(id) { const i = leads.findIndex((l) => l.id === id); if (i >= 0) leads.splice(i, 1); },
+      async reviewsList() { try { return JSON.parse(localStorage.getItem("santevit_demo_reviews") || "[]"); } catch { return []; } },
+      async reviewSave(id, data) {
+        const list = await this.reviewsList();
+        const i = list.findIndex((r) => r.id === id);
+        const row = { ...data, id: id || `demo-r-${Date.now()}` };
+        if (i >= 0) list[i] = row; else list.push(row);
+        localStorage.setItem("santevit_demo_reviews", JSON.stringify(list));
+        localStorage.removeItem("sv_reviews_v1");
+      },
+      async reviewDelete(id) {
+        const list = (await this.reviewsList()).filter((r) => r.id !== id);
+        localStorage.setItem("santevit_demo_reviews", JSON.stringify(list));
+        localStorage.removeItem("sv_reviews_v1");
+      },
     };
   }
 
@@ -506,7 +549,7 @@
         el("td", { class: "py-2 pr-3" },
           el("a", { href: `https://wa.me/${phoneDigits}`, target: "_blank", rel: "noopener noreferrer", class: "block font-semibold text-wa-dark hover:underline", text: l.telefono }),
           el("a", { href: `mailto:${encodeURIComponent(l.correo).replace(/%40/g, "@")}`, class: "block text-xs text-brand-navy/60 hover:underline", text: l.correo })),
-        el("td", { class: "py-2 pr-3", text: SERVICES[l.servicio] || l.servicio }),
+        el("td", { class: "py-2 pr-3", text: SERVICE_LABELS[l.servicio] || l.servicio }),
         el("td", { class: "py-2 pr-3" }, l.urgente_48h ? el("span", { class: "rounded-full bg-brand-orange/15 px-2 py-0.5 text-xs font-bold text-[#a33102]", text: "Sí" }) : el("span", { class: "text-brand-navy/40", text: "No" })),
         el("td", { class: "py-2 pr-3 text-brand-navy/70", text: SOURCE_LABELS[l.utm_source] || l.utm_source || "Directo" }),
         el("td", { class: "py-2 pr-3" }, estado),
@@ -561,13 +604,203 @@
       return `"${s.replace(/"/g, '""')}"`;
     };
     const head = ["Fecha", "Nombre", "Celular", "Correo", "Servicio", "Prioritario 48h", "Canal", "Campaña", "Estado", "Notas"];
-    const lines = filtered().map((l) => [dateTimeCO(l.created_at), l.nombre, l.telefono, l.correo, SERVICES[l.servicio] || l.servicio,
+    const lines = filtered().map((l) => [dateTimeCO(l.created_at), l.nombre, l.telefono, l.correo, SERVICE_LABELS[l.servicio] || l.servicio,
       l.urgente_48h ? "Sí" : "No", SOURCE_LABELS[l.utm_source] || l.utm_source || "", l.utm_campaign || "", l.estado, l.notas || ""].map(safe).join(";"));
     const blob = new Blob(["﻿" + [head.map(safe).join(";"), ...lines].join("\r\n")], { type: "text/csv;charset=utf-8" });
     const a = el("a", { href: URL.createObjectURL(blob), download: `leads-santevit-${ymd(new Date())}.csv` });
     document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
+
+
+  /* ======================= PESTAÑAS DEL PANEL ======================= */
+  const adminTabs = $$(".admin-tab");
+  adminTabs.forEach((t) => t.addEventListener("click", () => {
+    adminTabs.forEach((x) => {
+      const on = x === t;
+      x.setAttribute("aria-selected", String(on));
+      x.classList.toggle("border-brand-navy", on);
+      x.classList.toggle("border-transparent", !on);
+      x.classList.toggle("text-brand-navy/50", !on);
+      document.getElementById(x.getAttribute("aria-controls")).hidden = !on;
+    });
+    if (t.id === "atab-reviews") loadReviews();
+  }));
+
+  /* ======================= RESEÑAS Y EQUIPO MÉDICO ======================= */
+  const SAFE_IMG = /^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+$/;
+  let reviews = [];
+  let editingReview = null;   // { id, tipo }
+  let photoData = null;       // data URL comprimida
+
+  async function loadReviews() {
+    try { reviews = await api.reviewsList(); renderReviewLists(); }
+    catch { toast("No se pudieron cargar las reseñas."); }
+  }
+
+  function reviewCard(r) {
+    const img = r.foto && SAFE_IMG.test(r.foto)
+      ? el("img", { src: r.foto, alt: "", class: "h-16 w-16 shrink-0 rounded-xl object-cover" })
+      : el("span", { class: "flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-brand-ice text-lg font-bold text-brand-blue", text: (r.nombre || "?").slice(0, 1).toUpperCase() });
+    const badge = el("span", {
+      class: `rounded-full px-2 py-0.5 text-xs font-bold ${r.publicado ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-700"}`,
+      text: r.publicado ? "Publicado" : "Oculto",
+    });
+    return el("article", { class: "flex flex-col rounded-2xl p-4 ring-1 ring-brand-navy/10" },
+      el("div", { class: "flex gap-3" }, img,
+        el("div", { class: "min-w-0" },
+          el("p", { class: "truncate font-bold", text: r.nombre }),
+          el("p", { class: "truncate text-sm text-brand-navy/60", text: r.rol || "" }),
+          el("div", { class: "mt-1 flex items-center gap-2" }, badge,
+            r.tipo === "paciente" && r.estrellas ? el("span", { class: "text-xs text-brand-blue", text: "★".repeat(r.estrellas) }) : null))),
+      el("p", { class: "mt-3 line-clamp-3 text-sm text-brand-navy/70", text: r.texto || "" }),
+      el("div", { class: "mt-auto flex gap-3 pt-4 text-sm font-semibold" },
+        el("button", { type: "button", class: "text-brand-blue hover:underline", text: "Editar", onclick: () => openReview(r.tipo, r) }),
+        el("button", { type: "button", class: "text-brand-navy/70 hover:underline", text: r.publicado ? "Ocultar" : "Publicar", onclick: () => togglePublish(r) }),
+        el("button", { type: "button", class: "ml-auto text-red-700 hover:underline", text: "Eliminar", onclick: () => deleteReview(r) })));
+  }
+
+  function renderReviewLists() {
+    const sorted = [...reviews].sort((a, b) => (a.orden ?? 0) - (b.orden ?? 0));
+    [["medico", "#list-medicos", "Aún no ha agregado médicos. Use “+ Médico del equipo”."],
+     ["paciente", "#list-pacientes", "Aún no hay testimonios. Use “+ Testimonio de paciente”."]].forEach(([tipo, sel, empty]) => {
+      const items = sorted.filter((r) => r.tipo === tipo);
+      $(sel).replaceChildren(...(items.length ? items.map(reviewCard) : [el("p", { class: "text-sm text-brand-navy/50", text: empty })]));
+    });
+  }
+
+  // Campos que se guardan (los mismos que permiten las reglas de Firestore)
+  function cleanReview(r) {
+    const out = {
+      tipo: r.tipo, nombre: r.nombre, texto: r.texto || "", publicado: !!r.publicado,
+      orden: Math.max(0, Math.min(999, parseInt(r.orden, 10) || 0)), autorizacion: true,
+    };
+    if (r.rol) out.rol = r.rol;
+    if (r.tipo === "medico" && r.registro) out.registro = r.registro;
+    if (r.tipo === "paciente") out.estrellas = Math.max(0, Math.min(5, parseInt(r.estrellas, 10) || 0));
+    if (r.foto && SAFE_IMG.test(r.foto)) out.foto = r.foto;
+    return out;
+  }
+
+  const rDlg = $("#review-dialog");
+  function setPhotoPreview(dataUrl) {
+    photoData = dataUrl;
+    const box = $("#r-photo-preview");
+    box.replaceChildren(dataUrl ? el("img", { src: dataUrl, alt: "Vista previa", class: "h-full w-full object-cover" }) : document.createTextNode("Sin foto"));
+    $("#r-photo-remove").hidden = !dataUrl;
+  }
+
+  function openReview(tipo, r = null) {
+    editingReview = { id: r?.id || null, tipo };
+    const isMed = tipo === "medico";
+    $("#review-title").textContent = `${r ? "Editar" : "Nuevo"} ${isMed ? "médico del equipo" : "testimonio de paciente"}`;
+    $("#review-help").textContent = isMed
+      ? "Aparece en la sección “Equipo médico”. Use una foto de frente, con buena luz."
+      : "Aparece en “Lo que dicen nuestros pacientes”. La foto es opcional.";
+    $("#r-rol-label").textContent = isMed ? "Especialidad" : "Detalle (opcional)";
+    $("#r-rol").placeholder = isMed ? "Ej. Cardiólogo" : "Ej. Paciente · Consulta de cardiología";
+    $("#r-texto-label").textContent = isMed ? "Perfil breve" : "Testimonio";
+    $("#r-texto").placeholder = isMed ? "Formación, experiencia y enfoque de atención…" : "Lo que la persona contó de su experiencia…";
+    $$("[data-only]", rDlg).forEach((n) => { n.hidden = n.dataset.only !== tipo; });
+    $("#r-nombre").value = r?.nombre || "";
+    $("#r-rol").value = r?.rol || "";
+    $("#r-registro").value = r?.registro || "";
+    $("#r-estrellas").value = String(r?.estrellas ?? 5);
+    $("#r-texto").value = r?.texto || "";
+    $("#r-count").textContent = String($("#r-texto").value.length);
+    $("#r-orden").value = String(r?.orden ?? 10);
+    $("#r-publicado").checked = r ? !!r.publicado : true;
+    $("#r-autorizacion").checked = !!r?.autorizacion;
+    $("#r-photo").value = "";
+    $("#review-error").textContent = "";
+    setPhotoPreview(r?.foto && SAFE_IMG.test(r.foto) ? r.foto : null);
+    rDlg.showModal();
+    $("#r-nombre").focus();
+  }
+  $("#new-medico").addEventListener("click", () => openReview("medico"));
+  $("#new-paciente").addEventListener("click", () => openReview("paciente"));
+  $("#r-texto").addEventListener("input", (e) => { $("#r-count").textContent = String(e.target.value.length); });
+  $("#r-photo-remove").addEventListener("click", () => setPhotoPreview(null));
+
+  // Ajusta y comprime la foto en el navegador: máx. 640 px, WEBP (o JPEG) ~80 %
+  function compressImage(file) {
+    return new Promise((resolve, reject) => {
+      if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return reject(new Error("formato"));
+      if (file.size > 15 * 1024 * 1024) return reject(new Error("grande"));
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const max = 640;
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale), h = Math.round(img.height * scale);
+        const c = document.createElement("canvas");
+        c.width = w; c.height = h;
+        const ctx = c.getContext("2d");
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        let q = 0.82, out = c.toDataURL("image/webp", q);
+        if (!out.startsWith("data:image/webp")) out = c.toDataURL("image/jpeg", q);
+        while (out.length > 380000 && q > 0.4) { q -= 0.1; out = c.toDataURL(out.startsWith("data:image/webp") ? "image/webp" : "image/jpeg", q); }
+        out.length > 390000 ? reject(new Error("grande")) : resolve(out);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("lectura")); };
+      img.src = url;
+    });
+  }
+  $("#r-photo").addEventListener("change", async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    $("#review-error").textContent = "";
+    try { setPhotoPreview(await compressImage(file)); }
+    catch { $("#review-error").textContent = "No se pudo usar esa imagen. Pruebe con una foto JPG o PNG."; }
+  });
+
+  $("#review-save").addEventListener("click", async () => {
+    const err = $("#review-error");
+    const data = {
+      tipo: editingReview.tipo,
+      nombre: $("#r-nombre").value.trim().replace(/[<>]/g, ""),
+      rol: $("#r-rol").value.trim().replace(/[<>]/g, ""),
+      registro: $("#r-registro").value.trim().replace(/[<>]/g, ""),
+      estrellas: $("#r-estrellas").value,
+      texto: $("#r-texto").value.trim(),
+      orden: $("#r-orden").value,
+      publicado: $("#r-publicado").checked,
+      foto: photoData,
+    };
+    if (data.nombre.length < 2) { err.textContent = "Escriba el nombre."; return; }
+    if (data.tipo === "paciente" && data.texto.length < 10) { err.textContent = "Escriba el testimonio (mínimo 10 caracteres)."; return; }
+    if (!$("#r-autorizacion").checked) { err.textContent = "Debe confirmar que tiene la autorización de la persona."; return; }
+    const btn = $("#review-save");
+    btn.disabled = true;
+    try {
+      await api.reviewSave(editingReview.id, cleanReview(data));
+      rDlg.close();
+      toast("Guardado. Se verá en la página en unos minutos.");
+      loadReviews();
+    } catch {
+      err.textContent = "No se pudo guardar. Revise su conexión e intente de nuevo.";
+    } finally { btn.disabled = false; }
+  });
+
+  async function togglePublish(r) {
+    try { await api.reviewSave(r.id, cleanReview({ ...r, publicado: !r.publicado })); toast(r.publicado ? "Ocultado" : "Publicado"); loadReviews(); }
+    catch { toast("No se pudo actualizar."); }
+  }
+  function deleteReview(r) {
+    const ok = el("button", { value: "ok", class: "rounded-full bg-red-700 px-5 py-2 font-semibold text-white", text: "Eliminar" });
+    confirmDialog.replaceChildren(el("form", { method: "dialog", class: "p-6" },
+      el("h3", { class: "text-lg font-bold", text: "Eliminar de la página" }),
+      el("p", { class: "mt-1 text-sm text-brand-navy/70", text: `Se eliminará “${r.nombre}” de forma permanente.` }),
+      el("div", { class: "mt-5 flex justify-end gap-2" },
+        el("button", { value: "cancel", class: "rounded-full px-4 py-2 font-semibold ring-1 ring-brand-navy/15", text: "Cancelar" }), ok)));
+    confirmDialog.onclose = async () => {
+      if (confirmDialog.returnValue !== "ok") return;
+      try { await api.reviewDelete(r.id); toast("Eliminado"); loadReviews(); } catch { toast("No se pudo eliminar."); }
+    };
+    confirmDialog.showModal();
+  }
 
   /* ---------- Arranque ---------- */
   if (!DEMO) enter();

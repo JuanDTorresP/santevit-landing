@@ -167,24 +167,158 @@
       }
       a.addEventListener("click", () => {
         if (HAS_WA) track("wa_click");
-        if (!HAS_WA && service) preselect(service);
-        if (!HAS_WA && a.dataset.preselect) preselect(a.dataset.preselect);
+        if (a.dataset.preselect) preselect(a.dataset.preselect);
       });
     });
   }
   setupWhatsApp();
 
   /* ---------- Preselección del servicio en el formulario ---------- */
-  const SERVICE_MAP = {
-    "ECG Express": "express",
-    "Chequeo Cardiometabólico": "cardiometabolico",
-    "Segunda Opinión": "segunda_opinion",
-  };
   function preselect(v) {
     const sel = $("#f-servicio");
-    if (sel) sel.value = SERVICE_MAP[v] || v;
+    if (sel && $(`option[value="${CSS.escape(v)}"]`, sel)) sel.value = v;
   }
   $$("[data-preselect]:not([data-wa])").forEach((a) => a.addEventListener("click", () => preselect(a.dataset.preselect)));
+
+  /* ======================= PESTAÑAS DE TARIFAS ======================= */
+  (function setupTabs() {
+    const tabs = $$('[role="tab"]');
+    if (!tabs.length) return;
+    function select(tab, focus) {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        const panel = document.getElementById(t.getAttribute("aria-controls"));
+        if (panel) panel.hidden = !on;
+      });
+      if (focus) tab.focus();
+    }
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(t));
+      t.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") select(tabs[(i + 1) % tabs.length], true);
+        if (e.key === "ArrowLeft") select(tabs[(i - 1 + tabs.length) % tabs.length], true);
+      });
+    });
+    // Enlaces directos: index.html#diagnostico abre esa pestaña
+    const hash = location.hash.replace("#", "");
+    const fromHash = tabs.find((t) => t.id === `tab-${hash}`);
+    if (fromHash) select(fromHash);
+  })();
+
+  /* ======================= APARICIÓN SUAVE AL HACER SCROLL ======================= */
+  function setupReveal(root = document) {
+    const els = $$("[data-reveal]:not(.reveal)", root);
+    if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("is-visible"); io.unobserve(en.target); } });
+    }, { rootMargin: "0px 0px -8% 0px" });
+    els.forEach((el) => { el.classList.add("reveal"); io.observe(el); });
+  }
+  setupReveal();
+
+  /* ======================= EQUIPO MÉDICO Y TESTIMONIOS =======================
+     Se administran desde el panel (/admin → Reseñas y equipo). Solo se muestran
+     los publicados. Las fotos se guardan comprimidas dentro de Firestore. */
+  const el = (tag, props = {}, ...kids) => {
+    const n = document.createElement(tag);
+    Object.entries(props).forEach(([k, v]) => {
+      if (k === "class") n.className = v; else if (k === "text") n.textContent = v; else n.setAttribute(k, v);
+    });
+    kids.flat().forEach((k) => k != null && n.append(k));
+    return n;
+  };
+  const SAFE_IMG = /^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+$/;
+  const initials = (name) => clean(name, 80).split(" ").filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
+
+  function avatar(r, size) {
+    if (r.foto && SAFE_IMG.test(r.foto)) {
+      return el("img", { src: r.foto, alt: r.tipo === "medico" ? `Foto de ${r.nombre}` : "", class: size, loading: "lazy", decoding: "async" });
+    }
+    return el("span", { class: `${size} flex items-center justify-center bg-brand-ice font-display font-semibold text-brand-blue`, "aria-hidden": "true", text: initials(r.nombre) });
+  }
+
+  function renderReviews(list) {
+    const medicos = list.filter((r) => r.tipo === "medico").sort((a, b) => a.orden - b.orden);
+    const pacientes = list.filter((r) => r.tipo === "paciente").sort((a, b) => a.orden - b.orden);
+
+    const eq = $("#equipo"), eqGrid = $("#equipo-grid");
+    if (eq && eqGrid && medicos.length) {
+      eqGrid.replaceChildren(...medicos.map((m) => el("article", { class: "card flex flex-col overflow-hidden p-0", "data-reveal": "" },
+        avatar(m, "aspect-[4/3.4] w-full object-cover object-top text-4xl"),
+        el("div", { class: "flex flex-1 flex-col p-6" },
+          el("h3", { class: "text-lg font-semibold", text: m.nombre }),
+          m.rol ? el("p", { class: "mt-0.5 text-sm font-semibold text-brand-blue", text: m.rol }) : null,
+          m.texto ? el("p", { class: "mt-3 text-[15px] leading-relaxed text-brand-slate", text: m.texto }) : null,
+          m.registro ? el("p", { class: "mt-auto pt-4 text-xs text-brand-slate", text: `Registro médico: ${m.registro}` }) : null))));
+      eq.hidden = false;
+      $("[data-nav-equipo]")?.removeAttribute("hidden");
+    }
+
+    const ts = $("#testimonios"), tsGrid = $("#testimonios-grid");
+    if (ts && tsGrid && pacientes.length) {
+      tsGrid.replaceChildren(...pacientes.map((p) => {
+        const stars = Math.max(0, Math.min(5, Number(p.estrellas) || 0));
+        return el("figure", { class: "card flex flex-col p-7", "data-reveal": "" },
+          stars ? el("div", { class: "flex gap-0.5 text-brand-sky", role: "img", "aria-label": `${stars} de 5 estrellas` },
+            ...Array.from({ length: 5 }, (_, i) => el("span", { class: i < stars ? "" : "opacity-25", "aria-hidden": "true", text: "★" }))) : null,
+          el("blockquote", { class: "mt-4 flex-1 text-[16px] leading-relaxed" }, el("p", { text: `“${p.texto}”` })),
+          el("figcaption", { class: "mt-6 flex items-center gap-3 border-t border-brand-line/60 pt-5" },
+            avatar(p, "h-11 w-11 shrink-0 rounded-full object-cover text-sm"),
+            el("span", {},
+              el("span", { class: "block font-semibold", text: p.nombre }),
+              p.rol ? el("span", { class: "block text-sm text-brand-slate", text: p.rol }) : null)));
+      }));
+      ts.hidden = false;
+    }
+    setupReveal();
+  }
+
+  // Convierte un documento de Firestore (formato REST) a objeto simple
+  function fromFirestore(fields = {}) {
+    const out = {};
+    Object.entries(fields).forEach(([k, v]) => {
+      if ("stringValue" in v) out[k] = v.stringValue;
+      else if ("integerValue" in v) out[k] = Number(v.integerValue);
+      else if ("doubleValue" in v) out[k] = Number(v.doubleValue);
+      else if ("booleanValue" in v) out[k] = v.booleanValue;
+    });
+    return out;
+  }
+
+  async function loadReviews() {
+    const CACHE_KEY = "sv_reviews_v1";
+    const cached = (() => { try { return JSON.parse(localStorage.getItem(CACHE_KEY) || "null"); } catch { return null; } })();
+    if (cached && Date.now() - cached.t < 10 * 60 * 1000) { renderReviews(cached.list); return; }
+
+    if (!HAS_BACKEND) {
+      // MODO DEMO: reseñas creadas en el panel demo de este navegador
+      let demo = [];
+      try { demo = JSON.parse(localStorage.getItem("santevit_demo_reviews") || "[]"); } catch { demo = []; }
+      renderReviews(demo.filter((r) => r.publicado));
+      return;
+    }
+    try {
+      await appCheckReady;
+      const headers = { "Content-Type": "application/json" };
+      if (getAppCheckToken) { try { headers["X-Firebase-AppCheck"] = await getAppCheckToken(); } catch { /* nada */ } }
+      const res = await fetch(`${REST_BASE}/v1/${DB_PATH}:runQuery?key=${encodeURIComponent(FB.apiKey)}`, {
+        method: "POST", headers, credentials: "omit",
+        body: JSON.stringify({ structuredQuery: {
+          from: [{ collectionId: "reviews" }],
+          where: { fieldFilter: { field: { fieldPath: "publicado" }, op: "EQUAL", value: { booleanValue: true } } },
+          limit: 60,
+        } }),
+      });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const list = rows.filter((r) => r.document).map((r) => fromFirestore(r.document.fields));
+      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ t: Date.now(), list })); } catch { /* sin espacio: no se guarda */ }
+      renderReviews(list);
+    } catch { /* si falla, las secciones simplemente no se muestran */ }
+  }
+  loadReviews();
 
   /* ======================= FORMULARIO ======================= */
   const form = $("#lead-form");
@@ -255,7 +389,7 @@
     box.hidden = false;
     if (HAS_WA && data) {
       const label = $(`#f-servicio option[value="${data.servicio}"]`)?.textContent || "";
-      $("#success-wa").href = waUrl(`Hola Santévit, soy ${data.nombre}. Acabo de dejar mis datos para: ${label}.`, data.servicio === "equipos_comen" || data.servicio === "no_seguro" ? "asesor" : "citas");
+      $("#success-wa").href = waUrl(`Hola Santévit, soy ${data.nombre}. Acabo de dejar mis datos para: ${label}.`, ["equipos_comen", "no_seguro", "empresas"].includes(data.servicio) ? "asesor" : "citas");
     } else if (!HAS_WA) {
       $("#success-wa").hidden = true;
     }

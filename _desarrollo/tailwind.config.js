@@ -1,14 +1,18 @@
-/** Tailwind — paleta y tipografías del Manual de Marca Santévit IPS (v1.0, 2021) */
+/** Tailwind — paleta del Portafolio Corporativo 2026 (línea del PPT) + Manual de Marca */
 module.exports = {
   content: ["../index.html", "../privacidad.html", "../admin/*.html", "../assets/js/*.js"],
   theme: {
     extend: {
       colors: {
         brand: {
-          sky: "#5EB3E4",    // Pantone 2915 C — color principal
-          navy: "#00263A",   // Pantone 539 C  — textos y fondos oscuros
-          orange: "#E04403", // Pantone 1665 C — acento / CTA
+          navy: "#00263A",   // Pantone 539 C — títulos, botones principales, fondos oscuros
+          sky: "#5EB3E4",    // Pantone 2915 C — acentos y líneas
+          blue: "#2E8FCB",   // azul de acción (paso validado de contraste)
+          ice: "#EEF7FC",    // fondo de tarjetas del portafolio
+          line: "#BFDDF0",   // bordes suaves
+          slate: "#4A6A7E",  // texto secundario
           mint: "#3BD4AE",   // Pantone 3385 C — complementario
+          orange: "#E04403", // Pantone 1665 C — uso puntual
         },
         wa: { DEFAULT: "#25D366", dark: "#128C7E" },
       },
@@ -17,7 +21,8 @@ module.exports = {
         body: ['"Josefin Sans"', "system-ui", "sans-serif"],
       },
       boxShadow: {
-        card: "0 10px 30px -12px rgba(0, 38, 58, 0.25)",
+        card: "0 1px 2px rgba(0,38,58,.04), 0 12px 32px -16px rgba(0,38,58,.18)",
+        lift: "0 24px 48px -20px rgba(0,38,58,.35)",
       },
     },
   },

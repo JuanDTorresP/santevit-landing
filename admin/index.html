@@ -64,7 +64,15 @@
       </div>
     </header>
 
-    <main class="mx-auto max-w-7xl space-y-6 px-4 py-6">
+    <!-- Pestañas del panel -->
+    <div class="border-b border-brand-navy/10 bg-white">
+      <div role="tablist" aria-label="Secciones del panel" class="mx-auto flex max-w-7xl gap-6 px-4 text-sm font-semibold">
+        <button type="button" role="tab" id="atab-leads" aria-controls="view-leads" aria-selected="true" class="admin-tab border-b-2 border-brand-navy py-3 text-brand-navy">Contactos y métricas</button>
+        <button type="button" role="tab" id="atab-reviews" aria-controls="view-reviews" aria-selected="false" class="admin-tab border-b-2 border-transparent py-3 text-brand-navy/50 hover:text-brand-navy">Reseñas y equipo médico</button>
+      </div>
+    </div>
+
+    <main id="view-leads" role="tabpanel" aria-labelledby="atab-leads" class="mx-auto max-w-7xl space-y-6 px-4 py-6">
       <!-- Filtros globales -->
       <div class="flex flex-wrap items-center gap-3">
         <div role="group" aria-label="Periodo" class="inline-flex rounded-full bg-white p-1 shadow-sm ring-1 ring-brand-navy/10" id="range-group">
@@ -190,6 +198,29 @@
         </div>
       </section>
     </main>
+
+    <!-- ============================== RESEÑAS Y EQUIPO MÉDICO ============================== -->
+    <main id="view-reviews" role="tabpanel" aria-labelledby="atab-reviews" class="mx-auto max-w-7xl space-y-6 px-4 py-6" hidden>
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-bold">Reseñas y equipo médico</h2>
+          <p class="text-sm text-brand-navy/60">Lo que marque como <strong>Publicado</strong> aparece en la página en unos minutos.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" id="new-medico" class="btn-outline px-4 py-2 text-sm">+ Médico del equipo</button>
+          <button type="button" id="new-paciente" class="btn-primary px-4 py-2 text-sm">+ Testimonio de paciente</button>
+        </div>
+      </div>
+
+      <section class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-brand-navy/5">
+        <h3 class="text-lg font-bold">Equipo médico</h3>
+        <div id="list-medicos" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+      </section>
+      <section class="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-brand-navy/5">
+        <h3 class="text-lg font-bold">Testimonios de pacientes</h3>
+        <div id="list-pacientes" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+      </section>
+    </main>
   </div>
 
   <!-- Diálogo de notas -->
@@ -201,6 +232,72 @@
       <div class="mt-4 flex justify-end gap-2">
         <button value="cancel" class="rounded-full px-4 py-2 font-semibold ring-1 ring-brand-navy/15">Cancelar</button>
         <button id="notes-save" value="save" class="btn-primary px-5 py-2">Guardar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Formulario de reseña / médico -->
+  <dialog id="review-dialog" class="w-[min(94vw,560px)] rounded-3xl p-0 backdrop:bg-brand-navy/50">
+    <form id="review-form" method="dialog" class="max-h-[90vh] overflow-y-auto p-6" novalidate>
+      <h3 id="review-title" class="text-lg font-bold">Nuevo testimonio</h3>
+      <p id="review-help" class="mt-1 text-sm text-brand-navy/60"></p>
+
+      <div class="mt-5 flex items-center gap-4">
+        <div id="r-photo-preview" class="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-brand-ice text-xs text-brand-slate">Sin foto</div>
+        <div class="space-y-2 text-sm">
+          <label class="btn-outline cursor-pointer px-4 py-2 text-sm">
+            Subir foto
+            <input id="r-photo" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" />
+          </label>
+          <button type="button" id="r-photo-remove" class="block text-sm font-semibold text-red-700 hover:underline" hidden>Quitar foto</button>
+          <p class="text-xs text-brand-navy/50">JPG, PNG o WEBP. Se ajusta y comprime automáticamente.</p>
+        </div>
+      </div>
+
+      <div class="mt-5 space-y-4">
+        <div>
+          <label for="r-nombre" class="field-label">Nombre</label>
+          <input id="r-nombre" class="field" maxlength="80" required />
+        </div>
+        <div>
+          <label for="r-rol" class="field-label" id="r-rol-label">Detalle</label>
+          <input id="r-rol" class="field" maxlength="80" />
+        </div>
+        <div data-only="medico">
+          <label for="r-registro" class="field-label">Registro médico (opcional)</label>
+          <input id="r-registro" class="field" maxlength="40" />
+        </div>
+        <div data-only="paciente">
+          <label for="r-estrellas" class="field-label">Calificación</label>
+          <select id="r-estrellas" class="field">
+            <option value="5">★★★★★ (5)</option><option value="4">★★★★ (4)</option><option value="3">★★★ (3)</option><option value="0">Sin estrellas</option>
+          </select>
+        </div>
+        <div>
+          <label for="r-texto" class="field-label" id="r-texto-label">Texto</label>
+          <textarea id="r-texto" class="field h-32" maxlength="600"></textarea>
+          <p class="mt-1 text-right text-xs text-brand-navy/50"><span id="r-count">0</span>/600</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="r-orden" class="field-label">Orden en la página</label>
+            <input id="r-orden" type="number" min="0" max="999" value="10" class="field" />
+            <p class="mt-1 text-xs text-brand-navy/50">Menor número = aparece primero.</p>
+          </div>
+          <label class="mt-7 flex items-center gap-2 text-sm font-semibold">
+            <input id="r-publicado" type="checkbox" class="h-5 w-5 accent-brand-navy" checked /> Publicado
+          </label>
+        </div>
+        <label class="flex items-start gap-3 rounded-xl bg-amber-50 p-3 text-sm text-amber-900">
+          <input id="r-autorizacion" type="checkbox" class="mt-0.5 h-5 w-5 shrink-0 accent-brand-navy" />
+          <span>Tengo autorización de esta persona para publicar su nombre, foto y opinión en la página (Ley 1581 de 2012).</span>
+        </label>
+        <p id="review-error" class="text-sm text-red-700" role="alert"></p>
+      </div>
+
+      <div class="mt-6 flex justify-end gap-2">
+        <button value="cancel" formnovalidate class="rounded-full px-4 py-2 font-semibold ring-1 ring-brand-navy/15">Cancelar</button>
+        <button id="review-save" type="button" class="btn-primary px-5 py-2">Guardar</button>
       </div>
     </form>
   </dialog>
