@@ -166,7 +166,7 @@
         a.href = "#contacto"; // sin número: el CTA lleva al formulario
       }
       a.addEventListener("click", () => {
-        if (HAS_WA) track("wa_click");
+        if (HAS_WA) { track("wa_click"); window.santevitConversion?.("whatsapp", a.dataset.waSource); }
         if (a.dataset.preselect) preselect(a.dataset.preselect);
       });
     });
@@ -384,6 +384,7 @@
   }
 
   function showSuccess(data) {
+    if (data) window.santevitConversion?.("lead", data.servicio); // conversión de Google Ads
     form.hidden = true;
     const box = $("#lead-success");
     box.hidden = false;

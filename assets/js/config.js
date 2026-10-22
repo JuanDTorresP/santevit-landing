@@ -35,6 +35,13 @@ window.SANTEVIT_CONFIG = Object.freeze({
 
   RECAPTCHA_SITE_KEY: "",
 
+  // Google Ads: ID de la etiqueta y etiquetas de conversión (las da Google Ads
+  // en Objetivos → Conversiones → la conversión → "Configurar etiqueta").
+  // Si una etiqueta está vacía, esa conversión simplemente no se envía.
+  GOOGLE_ADS_ID: "AW-11320683982",
+  GOOGLE_ADS_LABEL_LEAD: "",
+  GOOGLE_ADS_LABEL_WHATSAPP: "",
+
   // Mensajes que se precargan al abrir cada WhatsApp desde la página
   WHATSAPP_MENSAJE_CITAS:
     "Hola Santévit, quiero agendar un electrocardiograma con lectura especializada.",
